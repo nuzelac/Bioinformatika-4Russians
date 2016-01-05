@@ -400,6 +400,7 @@ int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA, int* podnizB)
 			 }
 			 bTop = blokovi[matrica[i - 1][j]];
 			 bLeft = blokovi[matrica[i][j - 1]];
+			 
 			 matrica[i][j] = bTop.hashDownOffsets + bLeft.hashRightOffsets + hashLetters(sL);
 			// matrica[i][j] = hashf(s);
 		}
@@ -448,77 +449,175 @@ void urediNizove() {
 	while (nizB.size() % tVrijednost != 0)
 		nizB = nizB.substr(0, nizB.size() - 1);
 }
+int* podnizA;
+int* podnizB;
 void editScript(int** matrica) {
-	/*
-	int i = nizB.size();
-	int j = nizA.size();
+	
+	
+	
+
+	int i = nizB.size()/tVrijednost-1; // {i = ROWS in int**}
+	int j = nizA.size()/tVrijednost-1; // {j = COLS in int**}
+	int a = tVrijednost;
+	int b = tVrijednost;
+	int cnterB = nizB.size()-1;
+	int cnterA = nizA.size()-1;
+	Cell** matrix;
+	//a = 0 -> got top in matrica {a = ROWS in Cell**}
+	//b = 0 - > got left in matrica {b = COLS in Cell**}
+	int cnter = 0;
 	int size;
-	if (i > j)
-	size = i;
-	else size = j;
+	if (nizA.size() > nizB.size())
+		size = nizA.size();
+	else size = nizB.size();
 	int val = size * 2;
 	vector<char> prvi(val);
 	vector<char> drugi(val);
 	vector<char> srednji(val);
-	int cnt = 0;
-	int brojPoklopljenih = 0;
-	while (matrica[i][j].left != false || matrica[i][j].top != false) {
-	//cout << i << " " << j << " " << size << endl;
 
-	if (matrica[i][j].left == true && matrica[i][j].top == true) {
-	prvi.insert(prvi.begin(), nizA[j - 1]);
-	drugi.insert(drugi.begin(), nizB[i - 1]);
-	if (nizA[j - 1] == nizB[i - 1]) {
-	srednji.insert(srednji.begin(), '\|');
-	brojPoklopljenih++;
+	cout << i << " " << j << endl;
+	while ( (i+j)!=0 ) 
+	{				
+		matrix = blokovi[matrica[i][j]].matrix;
+		while (true) {
+			if (matrix[a][b].top == true && matrix[a][b].left == true) {
+				a--;
+				b--;
+				prvi.insert(prvi.begin(), nizA[cnterA]);
+				drugi.insert(drugi.begin(), nizB[cnterB]);
+				if (nizA[cnterA] == nizB[cnterB]) {
+					srednji.insert(srednji.begin(), '\|');
+				}
+				else srednji.insert(srednji.begin(), '.');
+				cnterA--;
+				cnterB--;
+			}
+			else if (matrix[a][b].top == true) {
+				a--;
+				drugi.insert(drugi.begin(), nizB[cnterB]);
+				prvi.insert(prvi.begin(), '-');
+				srednji.insert(srednji.begin(), ' ');
+				cnterB--;
+			}
+			else {
+				b--;
+				drugi.insert(drugi.begin(), '-');
+				prvi.insert(prvi.begin(), nizA[cnterA]);
+				srednji.insert(srednji.begin(), ' ');
+				cnterA--;
+			}
+			cnter++;
+			if (i == 0 && j != 0) {
+				if (a <= 0)
+					a = 0;
+				if (b == 0)
+					break;
+			}
+			else if (j == 0 && i != 0) {
+				if (b <= 0)
+					b = 0;
+				if (a == 0)
+					break;
+			}
+			else {
+				if (a == 0 || b == 0)
+					break;
+			}
+			
+		}
+		if (a == 0 && b == 0) {
+			if (i == 0) {
+				j--;
+				a = 0;
+				b = tVrijednost;
+			} else if(j == 0) {
+				i--;
+				b = 0;
+				a = tVrijednost;
+			}
+			else {
+				i--;
+				j--;
+				a = tVrijednost;
+				b = tVrijednost;
+			}
+			
+		}
+		else if (a == 0) {
+				i--;
+				a = tVrijednost;			
+		}
+		else if (b == 0) {
+				j--;
+				b = tVrijednost;			
+		}
+		cout << i << " " << j << endl;
 	}
-	else srednji.insert(srednji.begin(), '.');
-	i--;
-	j--;
-
-	//cout << "TOPLEFT" << endl;
-
+	
+	matrix = blokovi[matrica[0][0]].matrix;
+	while (true) {
+		if (matrix[a][b].top == true && matrix[a][b].left == true) {
+			a--;
+			b--;
+			prvi.insert(prvi.begin(), nizA[cnterA]);
+			drugi.insert(drugi.begin(), nizB[cnterB]);
+			if (nizA[cnterA] == nizB[cnterB]) {
+				srednji.insert(srednji.begin(), '\|');
+			}
+			else srednji.insert(srednji.begin(), '.');
+			cnterA--;
+			cnterB--;
+		}
+		else if (matrix[a][b].top == true) {
+			a--;
+			drugi.insert(drugi.begin(), nizB[cnterB]);
+			prvi.insert(prvi.begin(), '-');
+			srednji.insert(srednji.begin(), ' ');
+			cnterB--;
+		}
+		else {
+			b--;
+			drugi.insert(drugi.begin(), '-');
+			prvi.insert(prvi.begin(), nizA[cnterA]);
+			srednji.insert(srednji.begin(), ' ');
+			cnterA--;
+		}
+		cnter++;
+		if (a == 0 && b == 0)
+			break;
 	}
-	else if (matrica[i][j].left == true && matrica[i][j].top == false) {
-	prvi.insert(prvi.begin(), nizA[j - 1]);
-	drugi.insert(drugi.begin(), '-');
-	srednji.insert(srednji.begin(), ' ');
-	j--;
-
-
-	//cout << "LEFT" << endl;
-	}
-	else {
-	prvi.insert(prvi.begin(), '-');
-	drugi.insert(drugi.begin(), nizB[i - 1]);
-	srednji.insert(srednji.begin(), ' ');
-	i--;
-
-	//cout << "TOP" << endl;
-	}
-	cnt++;
-	}
+	for (int i = 0; i < cnter; i++)
+		cout << prvi[i];
+	cout << endl;
+	for (int i = 0; i < cnter; i++)
+		cout << srednji[i];
+	cout << endl;
+	for (int i = 0; i < cnter; i++)
+		cout << drugi[i];
+	cout << endl;
+	
+	
 	int x = 1;
 	if (size > 100)
-	x = 50;
-	else x = cnt;
-	for (int j = 0; j < cnt; j = j + x) {
-	for (int i = j; i < j + x; i++) {
-	outputFile << prvi[i];
+		x = 65;
+	else x = cnter;
+	for (int j = 0; j < cnter; j = j + x) {
+		for (int i = j; i < j + x; i++) {
+			outputFile << prvi[i];
 	}
 	outputFile << endl;
 	for (int i = j; i < j + x; i++) {
-	outputFile << srednji[i];
+		outputFile << srednji[i];
 	}
 	outputFile << endl;
 	for (int i = j; i < j + x; i++) {
-	outputFile << drugi[i];
+		outputFile << drugi[i];
 	}
 	outputFile << endl;
 	}
 	outputFile << endl;
-	cout << "Broj poklapanja: " << brojPoklopljenih << "\\" << cnt << " (" << ((double)brojPoklopljenih / (double)cnt) * 100 << " %)" << endl;
-	*/
+	
+	
 }
 
 void writeMinDistance(int** matrica) {
@@ -543,8 +642,7 @@ int getNumfromString(char s) {
 		return 3;
 }
 
-int* podnizA;
-int* podnizB;
+
 
 void getsubArrays() {
 	podnizA = new int[nizA.size()];
