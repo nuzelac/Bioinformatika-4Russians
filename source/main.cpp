@@ -551,7 +551,7 @@ void editScript(int** matrica) {
 				j--;
 				b = tVrijednost;			
 		}
-		cout << i << " " << j << endl;
+		//cout << i << " " << j << endl;
 	}
 	
 	matrix = blokovi[matrica[0][0]].matrix;
@@ -586,6 +586,7 @@ void editScript(int** matrica) {
 		if (a == 0 && b == 0)
 			break;
 	}
+	/*
 	for (int i = 0; i < cnter; i++)
 		cout << prvi[i];
 	cout << endl;
@@ -595,13 +596,14 @@ void editScript(int** matrica) {
 	for (int i = 0; i < cnter; i++)
 		cout << drugi[i];
 	cout << endl;
-	
+	*/
 	
 	int x = 1;
 	if (size > 100)
-		x = 65;
+		x = 60;
 	else x = cnter;
 	for (int j = 0; j < cnter; j = j + x) {
+		outputFile << "Lines:" << j << " - " << (j+x) << endl;
 		for (int i = j; i < j + x; i++) {
 			outputFile << prvi[i];
 	}
