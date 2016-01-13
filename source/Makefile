@@ -16,7 +16,7 @@ Blok.o : Blok.cpp Blok.h
 Cell.o : Cell.cpp Cell.h
 	$(CC) $(CFLAGS) Cell.cpp
 
-FourRussians.o : FourRussians.cpp FourRussians.h Cell.o Blok.o
+FourRussians.o : FourRussians.cpp Cell.o Blok.o
 	$(CC) $(CFLAGS) FourRussians.cpp
 
 clean:

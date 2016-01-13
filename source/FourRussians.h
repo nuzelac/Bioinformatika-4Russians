@@ -17,10 +17,12 @@ public:
 	string stringA;
 	string stringB;
 	int tValue;
+	string fileName;
+    string outputFileName;
+    int outputFormat;
 
 	signed char* E = new signed char[4];
 	int* O = new int[3];
-	ofstream outputFile = ofstream("bla.txt");
 
 	int threePowTValue;
 	int fourPowTValue;

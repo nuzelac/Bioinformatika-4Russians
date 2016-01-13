@@ -244,7 +244,7 @@ int** FourRussians::calculateEditMatrix(int lenA, int lenB, int* substringA,
 }
 
 void FourRussians::readStrings() {
-  ifstream infile("primjer-10000.in");
+  ifstream infile(fileName);
   if (!infile.is_open()) {
     cout << " Failed to open file" << endl;
   } else {
@@ -279,6 +279,7 @@ void FourRussians::editScript(int** Matrix) {
   int cnterB = (int)stringB.size() - 1;
   int cnterA = (int)stringA.size() - 1;
   Cell** matrix;
+  ofstream outputFile(outputFileName);
   // a = 0 -> got top in matrix {a = ROWS in Cell**}
   // b = 0 - > got left in matrix {b = COLS in Cell**}
   int cnter = 0;
