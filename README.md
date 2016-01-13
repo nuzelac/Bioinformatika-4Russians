@@ -24,6 +24,6 @@ Implemented solution applies Four Russians method to speed up execution of menti
 
 ### Authors ###
 
-* Authors: Nino Uzelac, Domagoj Magaš, Marko Sertić
+* Authors:Domagoj Magaš, Nino Uzelac and Marko Sertić
 * Project made as part of Bionformatics course at Faculty of Electrical Engineering
 * Link to course: https://www.fer.unizg.hr/predmet/bio
