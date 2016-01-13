@@ -1,6 +1,6 @@
-OBJS = main.o Blok.o Cell.o FourRussians.o
+OBJS = main.o Blok.o Cell.o FourRussians.o Hash.o
 CC = g++
-DEBUG = -std=c++11 -g
+DEBUG = -std=c++11
 CFLAGS = -c $(DEBUG) -O2 -pthread
 LFLAGS = -Wall $(DEBUG) -pthread
 
@@ -16,8 +16,11 @@ Blok.o : Blok.cpp Blok.h
 Cell.o : Cell.cpp Cell.h
 	$(CC) $(CFLAGS) Cell.cpp
 
-FourRussians.o : FourRussians.cpp Cell.o Blok.o
+FourRussians.o : FourRussians.cpp Cell.o Blok.o Hash.o
 	$(CC) $(CFLAGS) FourRussians.cpp
+
+Hash.o : Hash.cpp
+	$(CC) $(CFLAGS) Hash.cpp
 
 clean:
 	rm -f *.o *~ p1

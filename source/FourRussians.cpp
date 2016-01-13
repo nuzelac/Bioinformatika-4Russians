@@ -10,114 +10,23 @@ FourRussians::FourRussians(string inputFileName, string outputFileName, int outp
   this->tValue = calculateTValue((int)stringA.size(), (int)stringB.size());
   this->tValue = tValue;
 
-  threePowTValue = pow(3, tValue);
-  fourPowTValue = pow(4, tValue);
-  fourPowTValueSquare = fourPowTValue * fourPowTValue;
+  this->hash = Hash(tValue);
 
-  downOffsets = new uint8_t[threePowTValue * threePowTValue *
-                            fourPowTValueSquare];
-  rightOffsets = new uint8_t[threePowTValue * threePowTValue *
-                             fourPowTValueSquare];
+  int pow3 = pow(3, tValue);
+  int pow4 = pow(4, tValue);
+  int size = pow3 * pow3 * pow4 * pow4;
+
+  downOffsets = new uint8_t[size];
+  rightOffsets = new uint8_t[size];
 
   editStrings();
 
   blocks = new Blok[getSizeBlocks()];
 }
 
-
-int FourRussians::format_offset(string offset) {
-  int result = 0;
-  int toPower = 3;
-  for (int i = 0; i < offset.size(); ++i) {
-    int val;
-    if (offset[i] == '-') {
-      val = 0;
-      i++;
-    } else if (offset[i] == '0') {
-      val = 1;
-    } else {
-      val = 2;
-    }
-
-    result = result * toPower + val;
-  }
-
-  return result;
-}
-
-inline int FourRussians::format_letters(string& letters) {
-  int result = 0;
-  int toPower = 4;
-  for (int i = 0; i < letters.size(); ++i) {
-    int val;
-    if (letters[i] == 'A') {
-      val = 0;
-    } else if (letters[i] == 'C') {
-      val = 1;
-    } else if (letters[i] == 'T') {
-      val = 2;
-    } else if (letters[i] == 'G') {
-      val = 3;
-    }
-
-    result = result * toPower + val;
-  }
-
-  return result;
-}
-
-inline int FourRussians::merge_hashes(int h1, int h2, int h3, int h4) {
-  return h1 * threePowTValue * fourPowTValueSquare +
-         h2 * fourPowTValueSquare + h3 * fourPowTValue + h4;
-}
-
-int FourRussians::to_hash(string offset1, string offset2, string& a1, string& a2) {
-  int h1 = format_offset(offset1);
-  int h2 = format_offset(offset2);
-  int h3 = format_letters(a1);
-  int h4 = format_letters(a2);
-
-  int h_konacno = merge_hashes(h1, h2, h3, h4);
-
-  return h_konacno;
-}
-
-int FourRussians::to_hash(int h1, string offset2, int h3, int h4) {
-  int h2 = format_offset(offset2);
-
-  int h_final = merge_hashes(h1, h2, h3, h4);
-  return h_final;
-}
-
-int FourRussians::to_hash(string offset1, int h2, int h3, int h4) {
-  int h1 = format_offset(offset1);
-
-  int h_final = merge_hashes(h1, h2, h3, h4);
-  return h_final;
-}
-
-int FourRussians::to_hash(string offset1, string offset2, int h3, int h4) {
-  int h1 = format_offset(offset1);
-  int h2 = format_offset(offset2);
-
-  int h_final = merge_hashes(h1, h2, h3, h4);
-  return h_final;
-}
-
-int FourRussians::to_hash(int h1, int h2, int h3, int h4) {
-  int h_final = merge_hashes(h1, h2, h3, h4);
-  return h_final;
-}
-
 void FourRussians::printOut(vector<string> v) {
   for (int i = 0; i < v.size(); i++) cout << v[i];
   cout << endl;
-}
-
-string FourRussians::getString(vector<string> combo) {
-  string s = "";
-  for (int i = 0; i < combo.size(); i++) s = s + (string)combo[i];
-  return s;
 }
 
 void FourRussians::generate(int i, int tValue, vector<int>& counters) {
@@ -138,7 +47,7 @@ void FourRussians::generate(int i, int tValue, vector<int>& counters) {
         }
       }
     }
-    int hashed = to_hash(s[0], s[1], s[2], s[3]);
+    int hashed = hash.to_hash(s[0], s[1], s[2], s[3]);
 
     for (int i = 0; i < tValue; i++) topO[i] = O[counters[i]];
     for (int i = tValue; i < tValue * 2; i++)
@@ -220,9 +129,8 @@ int** FourRussians::calculateEditMatrix() {
   for (int k = 0; k < tValue; k++) sL = sL + "1";
   int leftS = substringB[0];
   int topS = substringA[0];
-  //    s = sT + sL + topS + leftS;
 
-  int hashed = to_hash(sT, sL, topS, leftS);
+  int hashed = hash.to_hash(sT, sL, topS, leftS);
 
   printf("lena %d lenb %d\n", lena, lenb);
 
@@ -230,24 +138,15 @@ int** FourRussians::calculateEditMatrix() {
   for (int k = 1; k < lena; k++) {
     topS = substringA[k];
     hashed =
-        to_hash(sT, blocks[matrix[0][k - 1]].rightOffsets, topS, leftS);
+        hash.to_hash(sT, blocks[matrix[0][k - 1]].rightOffsets, topS, leftS);
     matrix[0][k] = hashed;
   }
   int initialtopS = substringA[0];
 
-  int maks = 0;
-  for (int i = 0; i < threePowTValue * threePowTValue * fourPowTValue *
-                          fourPowTValue;
-       ++i) {
-    if (blocks[i].downOffsets > maks) {
-      maks = blocks[i].rightOffsets;
-    }
-  }
-
   for (int i = 1; i < lenb; i++) {
     leftS = substringB[i];
 
-    hashed = to_hash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
+    hashed = hash.to_hash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
     matrix[i][0] = hashed;
     if (cnter % 1000 == 0) {
       cout << cnter << endl;
@@ -260,7 +159,7 @@ int** FourRussians::calculateEditMatrix() {
 
     for (int j = 1; j < lena; j++) {
       matrix[i][j] =
-          merge_hashes(downOffsets[matrix[i - 1][j]],
+          hash.merge_hashes(downOffsets[matrix[i - 1][j]],
                         rightOffsets[matrix[i][j - 1]], substringA[j], leftS);
     }
   }
@@ -445,7 +344,7 @@ void FourRussians::writeMinDistance(int** matrix) {
   cout << "MIN DISTANCE:" << min << endl;
 }
 
-int FourRussians::letter_to_num(char c) {
+int FourRussians::letterToNum(char c) {
   int val;
   if (c == 'A') {
     val = 0;
@@ -465,13 +364,13 @@ void FourRussians::getsubArrays() {
   for (int i = 0; i < stringA.size() / tValue; i++) {
     substringA[i] = 0;
     for (int j = 0; j < tValue; ++j) {
-      substringA[i] = substringA[i] * 4 + letter_to_num(stringA[i * tValue + j]);
+      substringA[i] = substringA[i] * 4 + letterToNum(stringA[i * tValue + j]);
     }
   }
   for (int i = 0; i < stringB.size() / tValue; i++) {
     substringB[i] = 0;
     for (int j = 0; j < tValue; ++j) {
-      substringB[i] = substringB[i] * 4 + letter_to_num(stringB[i * tValue + j]);
+      substringB[i] = substringB[i] * 4 + letterToNum(stringB[i * tValue + j]);
     }
   }
 }
