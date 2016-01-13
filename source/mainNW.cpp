@@ -14,6 +14,8 @@
 #include "stdafx.h"
 #include "nw.h"
 #include <time.h>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -48,10 +50,31 @@ int  main(int argc, char ** argv)
 	cout << "seq_2: " << seq_2 << endl;
 	cout << "-p: " << prm << endl;
 #endif
-
-	// Aligned sequences
 	string  seq_1_al;
 	string  seq_2_al;
+	string text;
+	// Aligned sequences
+	ifstream infile(argv[1]);
+	if (!infile.is_open()) {
+		cout << " Failed to open file" << endl;
+	}
+	else {
+		cout << "Opened OK" << endl;
+	}
+	int cnt = 0;
+	while (!infile.eof()) // To get you all the lines.
+	{
+		getline(infile, text); // Saves the line in STRING.
+		if (cnt == 0)
+			seq_1 = text;
+		else if (cnt == 1)
+			seq_2 = text;
+		cnt++;
+
+		//cout << text << endl; // Prints our STRING.
+	}
+	infile.close();
+	
 	const clock_t begin_time = clock();
 	// do something
 	
