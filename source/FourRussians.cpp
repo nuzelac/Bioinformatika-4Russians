@@ -387,6 +387,60 @@ void FourRussians::editScript(int** Matrix) {
     cnter++;
     if (a == 0 && b == 0) break;
   }
+  
+  //.maf
+  if(outputFormat == 0) {
+	int nonDashed1 = 0;
+	int nonDashed2 = 0;
+	int dashed1 = 0;
+	int dashed2 = 0;
+	int k;
+	
+	for(k=0; k < first.size(); k++) {
+		if(first[k] == 'A' || first[k] == 'C' || first[k] == 'T' || first[k] == 'G') {
+			nonDashed1 ++;
+		}
+		
+		if(first[k] == '-') {
+			dashed1++;
+		}
+		
+		if(second[k] == 'A' || second[k] == 'C' || second[k] == 'T' || second[k] == 'G') {
+			nonDashed2 ++;
+		}
+		
+		if(second[k] == '-') {
+			dashed2++;
+		}
+	}
+	
+	//a score=23262.0
+	outputFile << "# Score used in file is edit distance\n";
+	outputFile << "\n";
+	outputFile << "a score=\n";
+	outputFile << "\n";
+	outputFile << "s string1 0 " << nonDashed1 << " + " << nonDashed1 + dashed1 << " ";
+	
+	k = 0;
+	while(first[k] == 'A' ||  first[k] == 'C' || first[k] == 'T' || first[k] == 'G' || first[k] == '-') {
+		outputFile << first[k];
+		k++;
+	}
+	
+	outputFile << "\n";
+	outputFile << "s string2 0 " << nonDashed2 << " + " << nonDashed1 + dashed1 << " ";
+	
+	k = 0;
+	while(second[k] == 'A' ||  second[k] == 'C' || second[k] == 'T' || second[k] == 'G' || second[k] == '-') {
+		outputFile << second[k];
+		k++;
+	}
+	
+	outputFile << "\n"; 
+	
+  }
+  
+  else {
 
   int x = 1;
   if (size > 100)
@@ -408,6 +462,7 @@ void FourRussians::editScript(int** Matrix) {
     }
     outputFile << endl;
   }
+}
   outputFile << endl;
 }
 
