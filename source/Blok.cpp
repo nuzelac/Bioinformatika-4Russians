@@ -47,17 +47,9 @@ Blok::Blok(int tVal, signed char* topS, signed char* leftS, int* topO, int* left
     }
   }
 
-  // down offsets
   for (int i = 1; i <= tVal; i++) {
-    downOffsets = downOffsets * 3 +
-                  (matrix[tVal][i].value - matrix[tVal][i - 1].value + 1);
     sumDown = sumDown + (matrix[tVal][i].value - matrix[tVal][i - 1].value);
   }
-
-  // right offsets
-  for (int i = 1; i <= tVal; i++)
-    rightOffsets = rightOffsets * 3 +
-                   (matrix[i][tVal].value - matrix[i - 1][tVal].value + 1);
 }
 
 string Blok::printOut(vector<string> offsetA, vector<string> offsetB, string topS,
@@ -69,8 +61,25 @@ string Blok::printOut(vector<string> offsetA, vector<string> offsetB, string top
   return s;
 }
 
-int Blok::getDownOffsets(int tVal) { return downOffsets; }
-int Blok::getRightOffsets(int tVal) { return rightOffsets; }
+int Blok::calcDownOffsets(int tVal) {
+  int downOffsets = 0;
+  for (int i = 1; i <= tVal; i++) {
+    downOffsets = downOffsets * 3 +
+                (matrix[tVal][i].value - matrix[tVal][i - 1].value + 1);
+  }
+
+  return downOffsets;
+}
+int Blok::calcRightOffsets(int tVal) {
+  int rightOffsets = 0;
+
+  for (int i = 1; i <= tVal; i++) {
+    rightOffsets = rightOffsets * 3 +
+                   (matrix[i][tVal].value - matrix[i - 1][tVal].value + 1);
+  }
+
+  return rightOffsets;
+ }
 
 
 

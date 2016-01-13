@@ -17,25 +17,3 @@ string Cell::writeTop() {
 			return "T";
 		else return "F";
 }
-
-/*class Cell {
-
-public:
-	int value;
-	bool top;
-	bool left;
-	Cell() {};
-	Cell(int val) { value = val; }
-
-	string writeLeft() {
-		if (left == true)
-			return "T";
-		else return "F";
-	}
-	string writeTop() {
-		if (top == true)
-			return "T";
-		else return "F";
-	}
-
-};*/
