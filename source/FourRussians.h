@@ -39,8 +39,8 @@ public:
 	void readStrings();
 	size_t getSizeBlocks();
 	void editStrings();
-	void editScript(int** Matrix);
-	void writeMinDistance(int** matrix);
+	void editScript(int** Matrix, int minDistance);
+	int calculateMinDistance(int** matrix);
 	void getsubArrays();
 	void parallelPreProcessing();
 };

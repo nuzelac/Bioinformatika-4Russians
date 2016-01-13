@@ -17,6 +17,7 @@ int main(int argc, char** argv) {
   string tValueString;
   int value;
   int outputFormat;
+  int minDistance;
 
   vector<string> cmdLineArgs(argv, argv+argc);
 
@@ -100,10 +101,11 @@ int main(int argc, char** argv) {
   duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
   std::cout << "Duration of calculating min distance:" << duration << '\n';
 
-  fourRussians.writeMinDistance(distanceMatrix);
+  minDistance = fourRussians.calculateMinDistance(distanceMatrix);
+  cout << "MIN DISTANCE:" << minDistance << endl;
 
   start = std::clock();
-  fourRussians.editScript(distanceMatrix);
+  fourRussians.editScript(distanceMatrix, minDistance);
   duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
   std::cout << "Duration of calculating edit script:" << duration << '\n';

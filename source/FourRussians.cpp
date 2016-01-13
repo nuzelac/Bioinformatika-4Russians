@@ -166,7 +166,7 @@ void FourRussians::editStrings() {
   while (stringA.size() % tValue != 0) stringA = stringA.substr(0, stringA.size() - 1);
   while (stringB.size() % tValue != 0) stringB = stringB.substr(0, stringB.size() - 1);
 }
-void FourRussians::editScript(int** Matrix) {
+void FourRussians::editScript(int** Matrix, int minDistance) {
   int i = (int)stringB.size() / tValue - 1;  // {i = ROWS in int**}
   int j = (int)stringA.size() / tValue - 1;  // {j = COLS in int**}
   int a = tValue;
@@ -312,7 +312,7 @@ void FourRussians::editScript(int** Matrix) {
 	//a score=23262.0
 	outputFile << "# Score used in file is edit distance\n";
 	outputFile << "\n";
-	outputFile << "a score=\n";
+	outputFile << "a score=" << (double) minDistance <<"\n";
 	outputFile << "\n";
 	outputFile << "s string1 0 " << nonDashed1 << " + " << nonDashed1 + dashed1 << " ";
 	
@@ -361,14 +361,14 @@ void FourRussians::editScript(int** Matrix) {
   outputFile << endl;
 }
 
-void FourRussians::writeMinDistance(int** matrix) {
+int FourRussians::calculateMinDistance(int** matrix) {
   int min = 0;
 
   for (int j = 0; j < stringA.size() / tValue; j++) {
     min = min + blocks[matrix[stringB.size() / tValue - 1][j]].sumDown;
   }
   min = min + (int)stringB.size();
-  cout << "MIN DISTANCE:" << min << endl;
+  return min;
 }
 
 void FourRussians::getsubArrays() {
