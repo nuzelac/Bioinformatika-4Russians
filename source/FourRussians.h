@@ -2,11 +2,10 @@
 #include <map>
 #include <iostream>
 #include <fstream>
-#include "Blok.h"
 #include <cmath>
 #include <thread>
-
-//int tVrijednost;
+#include "Blok.h"
+#include "Hash.h"
 
 using namespace std;
 
@@ -17,51 +16,32 @@ public:
 	string stringA;
 	string stringB;
 	int tValue;
-	string fileName;
-    string outputFileName;
-    int outputFormat;
+	string inputFileName;
+  string outputFileName;
+  int outputFormat;
+  Hash hash;
 
 	signed char* E = new signed char[4];
 	int* O = new int[3];
 
-	int threePowTValue;
-	int fourPowTValue;
-	int fourPowTValueSquare;
 	uint8_t* downOffsets;
 	uint8_t* rightOffsets;
-
-	int maximum = 0;
-	int K;
 
 	Blok* blocks = NULL;
 
 	int* substringA;
 	int* substringB;
 
-	int hashOffsetsTop(int* cnters);
-	int hashOffsetsLeft(int* cnters);
-	int format_offset(string offset);
-	inline int format_letters(string& letters);
-	inline int merge_hashes(int h1, int h2, int h3, int h4);
-	int to_hash(string offset1, string offset2, string& a1, string& a2);
-	int to_hash(int h1, string offset2, int h3, int h4);
-	int to_hash(string offset1, int h2, int h3, int h4);
-	int to_hash(string offset1, string offset2, int h3, int h4);
-	int to_hash(int h1, int h2, int h3, int h4);
-	void printOut(vector<string> v);
-	string getString(vector<string> combo);
+	FourRussians(string inputFileName, string outputFileName, int outputFormat, int tValue);
 	void generate(int i, int tValue, vector<int>& counters);
 	int calculateTValue(int lenA, int lenB) noexcept(true);
-	int** calculateEditMatrix(int lenA, int lenB, int* substringA,
-	                                 int* substringB);
+	int** calculateEditMatrix();
 	void readStrings();
 	size_t getSizeBlocks();
 	void editStrings();
 	void editScript(int** Matrix);
 	void writeMinDistance(int** matrix);
-	int letter_to_num(char c);
 	void getsubArrays();
 	void parallelPreProcessing();
-
 };
 
