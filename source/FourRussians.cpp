@@ -130,24 +130,17 @@ int** FourRussians::calculateEditMatrix() {
   int leftS = substringB[0];
   int topS = substringA[0];
 
-  int hashed = hash.to_hash(sT, sL, topS, leftS);
-
-  printf("lena %d lenb %d\n", lena, lenb);
-
-  matrix[0][0] = hashed;
+  matrix[0][0] = hash.to_hash(sT, sL, topS, leftS);
   for (int k = 1; k < lena; k++) {
     topS = substringA[k];
-    hashed =
-        hash.to_hash(sT, blocks[matrix[0][k - 1]].rightOffsets, topS, leftS);
-    matrix[0][k] = hashed;
+    matrix[0][k] = hash.to_hash(sT, blocks[matrix[0][k - 1]].rightOffsets, topS, leftS);
   }
   int initialtopS = substringA[0];
 
   for (int i = 1; i < lenb; i++) {
     leftS = substringB[i];
 
-    hashed = hash.to_hash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
-    matrix[i][0] = hashed;
+    matrix[i][0] = hash.to_hash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
     if (cnter % 1000 == 0) {
       cout << cnter << endl;
       duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
