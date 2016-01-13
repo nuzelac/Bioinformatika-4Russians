@@ -187,12 +187,14 @@ int FourRussians::calculateTValue(int lenA, int lenB) noexcept(true) {
   return ((int)t + 1);
 }
 
-int** FourRussians::calculateEditMatrix(int lenA, int lenB, int* substringA,
-                                 int* substringB) {
+int** FourRussians::calculateEditMatrix() {
+  int lenA = (int)stringA.size();
+  int lenB = (int)stringB.size();
+
+  getsubArrays();
+
   int** matrix = NULL;
   matrix = new int*[lenB / tValue];
-
-  /* Your algorithm here */
 
   int lenb = lenB / tValue;
   int lena = lenA / tValue;

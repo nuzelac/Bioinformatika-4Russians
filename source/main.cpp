@@ -96,9 +96,7 @@ int main(int argc, char** argv) {
   std::cout << "Duration of preprocessing:" << duration << " s\n";
 
   start = std::clock();
-  fourRussians.getsubArrays();
-  int** distanceMatrix = fourRussians.calculateEditMatrix(
-      (int)fourRussians.stringA.size(), (int)fourRussians.stringB.size(), fourRussians.substringA, fourRussians.substringB);
+  int** distanceMatrix = fourRussians.calculateEditMatrix();
   duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
   std::cout << "Duration of calculating min distance:" << duration << '\n';
 

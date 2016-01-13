@@ -50,8 +50,7 @@ public:
 	string getString(vector<string> combo);
 	void generate(int i, int tValue, vector<int>& counters);
 	int calculateTValue(int lenA, int lenB) noexcept(true);
-	int** calculateEditMatrix(int lenA, int lenB, int* substringA,
-	                                 int* substringB);
+	int** calculateEditMatrix();
 	void readStrings();
 	size_t getSizeBlocks();
 	void editStrings();
