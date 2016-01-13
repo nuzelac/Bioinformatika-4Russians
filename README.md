@@ -18,7 +18,7 @@ Implemented solution applies Four Russians method to speed up execution of menti
 * Position yourself in source folder (use: cd source)
 * Run make in your terminal
 * To execute program run ./p1 inputFile outputFile format tValue
-* For details about passed arguments reun ./p1 -help or ./p1 --help
+* For details about passed arguments run ./p1 -help or ./p1 --help
 * To run test execute ./inputFile outputFile format tValue and pass location of test (/tests) file as inputFile
 
 
