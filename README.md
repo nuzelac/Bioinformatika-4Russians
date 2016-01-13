@@ -13,12 +13,12 @@ Implemented solution applies Four Russians method to speed up execution of menti
 
 ### Installation ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* Download repository to your local machine
+* Position yourself in bioinformatika4Russians folder (use: cd with terminal)
+* Position yourself in source folder (use: cd source)
+* Run make in your terminal
+* To execute program run ./p1 inoutFIle outputFIle format tValue
+* For details about passed arguments reun ./p1 -help or ./p1 --help
 
 ### Contribution guidelines ###
 
