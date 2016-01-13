@@ -20,13 +20,13 @@ string Cell::writeTop() {
 
 /*class Cell {
 
-public:	
+public:
 	int value;
 	bool top;
 	bool left;
 	Cell() {};
 	Cell(int val) { value = val; }
-	
+
 	string writeLeft() {
 		if (left == true)
 			return "T";
