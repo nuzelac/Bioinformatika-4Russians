@@ -76,7 +76,13 @@ int main(int argc, char** argv) {
   		exit(100);
   	}
   }
-
+  
+  /*
+   * All needed is to create fourRussians
+   * And to call implemented functions
+   * Code is designed to be reusable
+   * 
+   */ 
   FourRussians fourRussians(fileName, outputFileName, outputFormat, value);
 
   cout << "Prvi string:" << fourRussians.stringA << endl;

@@ -1,3 +1,8 @@
+/*
+ * Blok Class
+ * 
+ */
+
 #include "Blok.h"
 #include <iostream>
 #include <string>
@@ -61,6 +66,7 @@ string Blok::printOut(vector<string> offsetA, vector<string> offsetB,
   s = s + topS + leftS;
   return s;
 }
+
 
 int Blok::calcDownOffsets(int tVal) {
   int downOffsets = 0;

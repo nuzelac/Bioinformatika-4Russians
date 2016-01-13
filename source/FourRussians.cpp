@@ -1,3 +1,7 @@
+/*
+ * Four Russian class
+ */
+
 #include "FourRussians.h"
 
 FourRussians::FourRussians(string inputFileName, string outputFileName,
@@ -35,7 +39,7 @@ void FourRussians::generate(int i, int tValue, vector<int>& counters) {
         }
       }
     }
-    int hashed = hash.to_hash(s[0], s[1], s[2], s[3]);
+    int hashed = hash.toHash(s[0], s[1], s[2], s[3]);
 
     for (int i = 0; i < tValue; i++) topO[i] = O[counters[i]];
     for (int i = tValue; i < tValue * 2; i++)
@@ -110,11 +114,11 @@ int** FourRussians::calculateEditMatrix() {
   int leftS = substringB[0];
   int topS = substringA[0];
 
-  matrix[0][0] = hash.to_hash(sT, sL, topS, leftS);
+  matrix[0][0] = hash.toHash(sT, sL, topS, leftS);
   for (int k = 1; k < lena; k++) {
     topS = substringA[k];
     matrix[0][k] =
-        hash.to_hash(sT, rightOffsets[matrix[0][k - 1]], topS, leftS);
+        hash.toHash(sT, rightOffsets[matrix[0][k - 1]], topS, leftS);
   }
   int initialtopS = substringA[0];
 
@@ -122,7 +126,7 @@ int** FourRussians::calculateEditMatrix() {
     leftS = substringB[i];
 
     matrix[i][0] =
-        hash.to_hash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
+        hash.toHash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
     if (cnter % 1000 == 0) {
       cout << cnter << endl;
       duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
@@ -133,7 +137,7 @@ int** FourRussians::calculateEditMatrix() {
     cnter++;
 
     for (int j = 1; j < lena; j++) {
-      matrix[i][j] = hash.merge_hashes(downOffsets[matrix[i - 1][j]],
+      matrix[i][j] = hash.mergeHashes(downOffsets[matrix[i - 1][j]],
                                        rightOffsets[matrix[i][j - 1]],
                                        substringA[j], leftS);
     }
