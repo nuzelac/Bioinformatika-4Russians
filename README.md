@@ -1,14 +1,17 @@
 # README #
 
-To run application, follow steps listed below:
+In computer science, the Method of Four Russians is a technique for speeding up algorithms involving Boolean matrices, or more generally algorithms involving matrices in which each cell may take on only a bounded number of possible values.
 
-### What is this repository for? ###
+Calculating edit distance between two strings and recovering a sequence of edit operations that achieves this minimal edit distance, execution time of those operation depends greatly on strings lengths.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Implemented solution applies Four Russians method to speed up execution of mentioned operations.
 
-### How do I get set up? ###
+### About ###
+
+* Four Russians method is applied to speed up execution of calculating minimal edit distance
+* Version 1.0
+
+### Installation ###
 
 * Summary of set up
 * Configuration
