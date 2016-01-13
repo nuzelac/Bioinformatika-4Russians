@@ -41,9 +41,7 @@ public:
 	void editStrings();
 	void editScript(int** Matrix);
 	void writeMinDistance(int** matrix);
-	int letterToNum(char c);
 	void getsubArrays();
 	void parallelPreProcessing();
-
 };
 
