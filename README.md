@@ -17,16 +17,13 @@ Implemented solution applies Four Russians method to speed up execution of menti
 * Position yourself in bioinformatika4Russians folder (use: cd with terminal)
 * Position yourself in source folder (use: cd source)
 * Run make in your terminal
-* To execute program run ./p1 inoutFIle outputFIle format tValue
+* To execute program run ./p1 inputFile outputFile format tValue
 * For details about passed arguments reun ./p1 -help or ./p1 --help
+* To run test execute ./inputFile outputFile format tValue and pass location of test (/tests) file as inputFile
 
-### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
+### Authors ###
 
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+* Authors: Nino Uzelac, Domagoj Magaš, Marko Sertić
+* Project made as part of Bionformatics course at Faculty of Electrical Engineering
+* Link to course: https://www.fer.unizg.hr/predmet/bio
