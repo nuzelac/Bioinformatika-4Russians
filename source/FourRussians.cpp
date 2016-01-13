@@ -1,6 +1,7 @@
 #include "FourRussians.h"
 
-FourRussians::FourRussians(string inputFileName, string outputFileName, int outputFormat, int tValue) {
+FourRussians::FourRussians(string inputFileName, string outputFileName,
+                           int outputFormat, int tValue) {
   this->outputFormat = outputFormat;
   this->inputFileName = inputFileName;
   this->outputFileName = outputFileName;
@@ -102,21 +103,26 @@ int** FourRussians::calculateEditMatrix() {
   std::clock_t start;
   start = std::clock();
   string sL, sT;
-  for (int k = 0; k < tValue; k++) { sT = sT + "1"; sL = sL + "1"; }
+  for (int k = 0; k < tValue; k++) {
+    sT = sT + "1";
+    sL = sL + "1";
+  }
   int leftS = substringB[0];
   int topS = substringA[0];
 
   matrix[0][0] = hash.to_hash(sT, sL, topS, leftS);
   for (int k = 1; k < lena; k++) {
     topS = substringA[k];
-    matrix[0][k] = hash.to_hash(sT, rightOffsets[matrix[0][k - 1]], topS, leftS);
+    matrix[0][k] =
+        hash.to_hash(sT, rightOffsets[matrix[0][k - 1]], topS, leftS);
   }
   int initialtopS = substringA[0];
 
   for (int i = 1; i < lenb; i++) {
     leftS = substringB[i];
 
-    matrix[i][0] = hash.to_hash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
+    matrix[i][0] =
+        hash.to_hash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
     if (cnter % 1000 == 0) {
       cout << cnter << endl;
       duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
@@ -127,9 +133,9 @@ int** FourRussians::calculateEditMatrix() {
     cnter++;
 
     for (int j = 1; j < lena; j++) {
-      matrix[i][j] =
-          hash.merge_hashes(downOffsets[matrix[i - 1][j]],
-                        rightOffsets[matrix[i][j - 1]], substringA[j], leftS);
+      matrix[i][j] = hash.merge_hashes(downOffsets[matrix[i - 1][j]],
+                                       rightOffsets[matrix[i][j - 1]],
+                                       substringA[j], leftS);
     }
   }
   return matrix;
@@ -160,8 +166,10 @@ size_t FourRussians::getSizeBlocks() {
 }
 
 void FourRussians::editStrings() {
-  while (stringA.size() % tValue != 0) stringA = stringA.substr(0, stringA.size() - 1);
-  while (stringB.size() % tValue != 0) stringB = stringB.substr(0, stringB.size() - 1);
+  while (stringA.size() % tValue != 0)
+    stringA = stringA.substr(0, stringA.size() - 1);
+  while (stringB.size() % tValue != 0)
+    stringB = stringB.substr(0, stringB.size() - 1);
 }
 void FourRussians::editScript(int** Matrix, int minDistance) {
   int i = (int)stringB.size() / tValue - 1;  // {i = ROWS in int**}
@@ -279,82 +287,87 @@ void FourRussians::editScript(int** Matrix, int minDistance) {
     cnter++;
     if (a == 0 && b == 0) break;
   }
-  
-  //.maf
-  if(outputFormat == 0) {
-	int nonDashed1 = 0;
-	int nonDashed2 = 0;
-	int dashed1 = 0;
-	int dashed2 = 0;
-	int k;
-	
-	for(k=0; k < first.size(); k++) {
-		if(first[k] == 'A' || first[k] == 'C' || first[k] == 'T' || first[k] == 'G') {
-			nonDashed1 ++;
-		}
-		
-		if(first[k] == '-') {
-			dashed1++;
-		}
-		
-		if(second[k] == 'A' || second[k] == 'C' || second[k] == 'T' || second[k] == 'G') {
-			nonDashed2 ++;
-		}
-		
-		if(second[k] == '-') {
-			dashed2++;
-		}
-	}
-	
-	//a score=23262.0
-	outputFile << "# Score used in file is edit distance\n";
-	outputFile << "\n";
-	outputFile << "a score=" << (double) minDistance <<"\n";
-	outputFile << "\n";
-	outputFile << "s string1 0 " << nonDashed1 << " + " << nonDashed1 + dashed1 << " ";
-	
-	k = 0;
-	while(first[k] == 'A' ||  first[k] == 'C' || first[k] == 'T' || first[k] == 'G' || first[k] == '-') {
-		outputFile << first[k];
-		k++;
-	}
-	
-	outputFile << "\n";
-	outputFile << "s string2 0 " << nonDashed2 << " + " << nonDashed1 + dashed1 << " ";
-	
-	k = 0;
-	while(second[k] == 'A' ||  second[k] == 'C' || second[k] == 'T' || second[k] == 'G' || second[k] == '-') {
-		outputFile << second[k];
-		k++;
-	}
-	
-	outputFile << "\n"; 
-	
-  }
-  
-  else {
 
-  int x = 1;
-  if (size > 100)
-    x = 60;
-  else
-    x = cnter;
-  for (int j = 0; j < cnter; j = j + x) {
-    outputFile << "Lines:" << j << " - " << (j + x) << endl;
-    for (int i = j; i < j + x && i < cnter; i++) {
-      outputFile << first[i];
+  //.maf
+  if (outputFormat == 0) {
+    int nonDashed1 = 0;
+    int nonDashed2 = 0;
+    int dashed1 = 0;
+    int dashed2 = 0;
+    int k;
+
+    for (k = 0; k < first.size(); k++) {
+      if (first[k] == 'A' || first[k] == 'C' || first[k] == 'T' ||
+          first[k] == 'G') {
+        nonDashed1++;
+      }
+
+      if (first[k] == '-') {
+        dashed1++;
+      }
+
+      if (second[k] == 'A' || second[k] == 'C' || second[k] == 'T' ||
+          second[k] == 'G') {
+        nonDashed2++;
+      }
+
+      if (second[k] == '-') {
+        dashed2++;
+      }
     }
-    outputFile << endl;
-    for (int i = j; i < j + x && i < cnter; i++) {
-      outputFile << middle[i];
+
+    // a score=23262.0
+    outputFile << "# Score used in file is edit distance\n";
+    outputFile << "\n";
+    outputFile << "a score=" << (double)minDistance << "\n";
+    outputFile << "\n";
+    outputFile << "s string1 0 " << nonDashed1 << " + " << nonDashed1 + dashed1
+               << " ";
+
+    k = 0;
+    while (first[k] == 'A' || first[k] == 'C' || first[k] == 'T' ||
+           first[k] == 'G' || first[k] == '-') {
+      outputFile << first[k];
+      k++;
     }
-    outputFile << endl;
-    for (int i = j; i < j + x && i < cnter; i++) {
-      outputFile << second[i];
+
+    outputFile << "\n";
+    outputFile << "s string2 0 " << nonDashed2 << " + " << nonDashed1 + dashed1
+               << " ";
+
+    k = 0;
+    while (second[k] == 'A' || second[k] == 'C' || second[k] == 'T' ||
+           second[k] == 'G' || second[k] == '-') {
+      outputFile << second[k];
+      k++;
     }
-    outputFile << endl;
+
+    outputFile << "\n";
+
   }
-}
+
+  else {
+    int x = 1;
+    if (size > 100)
+      x = 60;
+    else
+      x = cnter;
+    for (int j = 0; j < cnter; j = j + x) {
+      outputFile << "Lines:" << j << " - " << (j + x) << endl;
+      for (int i = j; i < j + x && i < cnter; i++) {
+        outputFile << first[i];
+      }
+      outputFile << endl;
+      for (int i = j; i < j + x && i < cnter; i++) {
+        outputFile << middle[i];
+      }
+      outputFile << endl;
+      for (int i = j; i < j + x && i < cnter; i++) {
+        outputFile << second[i];
+      }
+      outputFile << endl;
+    }
+  }
   outputFile << endl;
 }
 
@@ -374,13 +387,15 @@ void FourRussians::getsubArrays() {
   for (int i = 0; i < stringA.size() / tValue; i++) {
     substringA[i] = 0;
     for (int j = 0; j < tValue; ++j) {
-      substringA[i] = substringA[i] * 4 + hash.letterToNum(stringA[i * tValue + j]);
+      substringA[i] =
+          substringA[i] * 4 + hash.letterToNum(stringA[i * tValue + j]);
     }
   }
   for (int i = 0; i < stringB.size() / tValue; i++) {
     substringB[i] = 0;
     for (int j = 0; j < tValue; ++j) {
-      substringB[i] = substringB[i] * 4 + hash.letterToNum(stringB[i * tValue + j]);
+      substringB[i] =
+          substringB[i] * 4 + hash.letterToNum(stringB[i * tValue + j]);
     }
   }
 }
@@ -413,4 +428,3 @@ void FourRussians::parallelPreProcessing() {
     t.join();
   }
 }
-

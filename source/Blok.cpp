@@ -5,7 +5,8 @@
 using namespace std;
 
 Blok::Blok(){};
-Blok::Blok(int tVal, signed char* topS, signed char* leftS, int* topO, int* leftO) {
+Blok::Blok(int tVal, signed char* topS, signed char* leftS, int* topO,
+           int* leftO) {
   matrix = new Cell*[tVal + 1];
 
   for (int i = 0; i < tVal + 1; i++) {
@@ -52,8 +53,8 @@ Blok::Blok(int tVal, signed char* topS, signed char* leftS, int* topO, int* left
   }
 }
 
-string Blok::printOut(vector<string> offsetA, vector<string> offsetB, string topS,
-              string leftS) {
+string Blok::printOut(vector<string> offsetA, vector<string> offsetB,
+                      string topS, string leftS) {
   string s = "";
   for (int i = 0; i < offsetA.size(); i++) s = s + offsetA[i];
   for (int i = 0; i < offsetA.size(); i++) s = s + offsetB[i];
@@ -65,7 +66,7 @@ int Blok::calcDownOffsets(int tVal) {
   int downOffsets = 0;
   for (int i = 1; i <= tVal; i++) {
     downOffsets = downOffsets * 3 +
-                (matrix[tVal][i].value - matrix[tVal][i - 1].value + 1);
+                  (matrix[tVal][i].value - matrix[tVal][i - 1].value + 1);
   }
 
   return downOffsets;
@@ -79,8 +80,4 @@ int Blok::calcRightOffsets(int tVal) {
   }
 
   return rightOffsets;
- }
-
-
-
-
+}

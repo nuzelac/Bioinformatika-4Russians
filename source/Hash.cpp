@@ -2,9 +2,7 @@
 
 using namespace std;
 
-Hash::Hash() {
-
-}
+Hash::Hash() {}
 
 Hash::Hash(int tValue) {
   threePowTValue = pow(3, tValue);
@@ -13,23 +11,23 @@ Hash::Hash(int tValue) {
 }
 
 int Hash::format_offset(string& offset) {
-	  int result = 0;
-	  int toPower = 3;
-	  for (int i = 0; i < offset.size(); ++i) {
-	    int val;
-	    if (offset[i] == '-') {
-	      val = 0;
-	      i++;
-	    } else if (offset[i] == '0') {
-	      val = 1;
-	    } else {
-	      val = 2;
-	    }
+  int result = 0;
+  int toPower = 3;
+  for (int i = 0; i < offset.size(); ++i) {
+    int val;
+    if (offset[i] == '-') {
+      val = 0;
+      i++;
+    } else if (offset[i] == '0') {
+      val = 1;
+    } else {
+      val = 2;
+    }
 
-	    result = result * toPower + val;
-	  }
+    result = result * toPower + val;
+  }
 
-	  return result;
+  return result;
 }
 
 int Hash::format_letters(string& letters) {
@@ -44,8 +42,8 @@ int Hash::format_letters(string& letters) {
 }
 
 int Hash::merge_hashes(int h1, int h2, int h3, int h4) {
-  return h1 * threePowTValue * fourPowTValueSquare +
-         h2 * fourPowTValueSquare + h3 * fourPowTValue + h4;
+  return h1 * threePowTValue * fourPowTValueSquare + h2 * fourPowTValueSquare +
+         h3 * fourPowTValue + h4;
 }
 
 int Hash::to_hash(string& offset1, string& offset2, string& a1, string& a2) {

@@ -8,12 +8,14 @@ Cell::Cell(){};
 Cell::Cell(int val) { value = val; }
 
 string Cell::writeLeft() {
-		if (left == true)
-			return "T";
-		else return "F";
+  if (left == true)
+    return "T";
+  else
+    return "F";
 }
 string Cell::writeTop() {
-		if (top == true)
-			return "T";
-		else return "F";
+  if (top == true)
+    return "T";
+  else
+    return "F";
 }
