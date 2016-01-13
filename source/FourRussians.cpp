@@ -47,9 +47,8 @@ void FourRussians::generate(int i, int tValue, vector<int>& counters) {
     Blok b = Blok(tValue, topS, leftS, topO, leftO);
 
     blocks[hashed] = b;
-    downOffsets[hashed] = b.downOffsets;
-    rightOffsets[hashed] = b.rightOffsets;
-    // printf("%d %d\n", downOffsets[hashed], rightOffsets[hashed]);
+    downOffsets[hashed] = b.calcDownOffsets(tValue);
+    rightOffsets[hashed] = b.calcRightOffsets(tValue);
 
     delete[] topO;
     delete[] leftO;
@@ -102,17 +101,15 @@ int** FourRussians::calculateEditMatrix() {
   double duration = 0;
   std::clock_t start;
   start = std::clock();
-  string sL = "";
-  string sT = "";
-  for (int k = 0; k < tValue; k++) sT = sT + "1";
-  for (int k = 0; k < tValue; k++) sL = sL + "1";
+  string sL, sT;
+  for (int k = 0; k < tValue; k++) { sT = sT + "1"; sL = sL + "1"; }
   int leftS = substringB[0];
   int topS = substringA[0];
 
   matrix[0][0] = hash.to_hash(sT, sL, topS, leftS);
   for (int k = 1; k < lena; k++) {
     topS = substringA[k];
-    matrix[0][k] = hash.to_hash(sT, blocks[matrix[0][k - 1]].rightOffsets, topS, leftS);
+    matrix[0][k] = hash.to_hash(sT, rightOffsets[matrix[0][k - 1]], topS, leftS);
   }
   int initialtopS = substringA[0];
 

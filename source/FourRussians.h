@@ -11,7 +11,6 @@ using namespace std;
 
 class FourRussians {
 public:
-	std::map<int, string> hashevi;
 	string text;
 	string stringA;
 	string stringB;

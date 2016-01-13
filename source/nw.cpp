@@ -131,7 +131,7 @@ int nw_align(                  // Needleman-Wunsch algorithm
 	char       ptr, nuc;
 	int        i = 0, j = 0;
 
-	const int  a = 1;   // Match
+	const int  a = 0;   // Match
 	const int  b = -1;   // Mismatch
 
 	const int  s[4][4] = { { a, b, b, b },    /* substitution matrix */
@@ -215,7 +215,7 @@ int nw(
 	bool         prm
 	)
 {
-	int  d = 2;                 /* gap penalty */
+	int  d = 1;                 /* gap penalty */
 
 	int  L1 = seq_1.length();
 	int  L2 = seq_2.length();
