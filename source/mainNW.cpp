@@ -13,6 +13,7 @@
 
 #include "stdafx.h"
 #include "nw.h"
+#include <time.h>
 
 using namespace std;
 
@@ -33,8 +34,8 @@ int  main(int argc, char ** argv)
 	}
 	*/
 	// Sequences to be aligned
-	string  seq_1 = "CCAATG";
-	string  seq_2 = "AACCAATG";
+	string  seq_1 = "ATTTGGCA";
+	string  seq_2 = "TCGGA";
 	/*
 	if (argc == 4)
 	{
@@ -51,10 +52,12 @@ int  main(int argc, char ** argv)
 	// Aligned sequences
 	string  seq_1_al;
 	string  seq_2_al;
-
+	const clock_t begin_time = clock();
+	// do something
+	
 	// Get alignment
 	nw(seq_1, seq_2, seq_1_al, seq_2_al, prm);
-	
+	std::cout <<"Min distance calculation time:" <<float(clock() - begin_time) / CLOCKS_PER_SEC << "sec";
 	// Print alignment
 	//print_al(seq_1_al, seq_2_al);
 	getchar();
