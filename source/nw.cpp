@@ -1,4 +1,3 @@
-
 /*-------------------------------------------
 *
 *        nw.c++ for program nw
@@ -6,7 +5,6 @@
 -------------------------------------------*/
 
 #include "nw.h"
-#include "stdafx.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -175,33 +173,7 @@ int nw_align(                  // Needleman-Wunsch algorithm
 			//traceback[i][j] = ptr;
 		}
 	}
-	/*
-	i--; j--;
 
-	while (i > 0 || j > 0)
-	{
-		switch (traceback[i][j])
-		{
-		case '|':      seq_1_al += '-';
-			seq_2_al += seq_2[i - 1];
-			i--;
-			break;
-
-		case '\\':      seq_1_al += seq_1[j - 1];
-			seq_2_al += seq_2[i - 1];
-			i--;  j--;
-			break;
-
-		case '-':      seq_1_al += seq_1[j - 1];
-			seq_2_al += '-';
-			j--;
-		}
-		k++;
-	}
-
-	reverse(seq_1_al.begin(), seq_1_al.end());
-	reverse(seq_2_al.begin(), seq_2_al.end());
-	*/
 	return  0;
 }
 
@@ -234,31 +206,18 @@ int nw(
 	// Create alignment
 	nw_align(F, traceback, seq_1, seq_2, seq_1_al, seq_2_al, d);
 
-#if DEBUG
-	int  L_al = seq_1_al.length();
-	cout << "Length after alignment: " << L_al << endl;
-#endif
 
 	if (prm)
 	{
-		//cout << "\nDynamic programming matrix: " << "\n\n";
 		int num = 0;
 		if (F[L2][L1] < 0)
 			num = -F[L2][L1];
 		else num = F[L2][L1];
 		cout << "MIN_DISTANCE: " << num;
-		//print_matrix(F, seq_1, seq_2);
-
-		//cout << "\nTraceback matrix: " << "\n\n";
-		//print_traceback(traceback, seq_1, seq_2);
 
 		cout << endl;
 	}
 
-//	for (int i = 0; i <= L2; i++)  delete F[i];
-//	delete[] F;
-	//for (int i = 0; i <= L2; i++)  delete traceback[i];
-//	delete[] traceback;
 
 	return  0;
 }
