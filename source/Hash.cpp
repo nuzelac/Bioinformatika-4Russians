@@ -36,17 +36,7 @@ int Hash::format_letters(string& letters) {
   int result = 0;
   int toPower = 4;
   for (int i = 0; i < letters.size(); ++i) {
-    int val;
-    if (letters[i] == 'A') {
-      val = 0;
-    } else if (letters[i] == 'C') {
-      val = 1;
-    } else if (letters[i] == 'T') {
-      val = 2;
-    } else if (letters[i] == 'G') {
-      val = 3;
-    }
-
+    int val = letterToNum(letters[i]);
     result = result * toPower + val;
   }
 
@@ -94,4 +84,18 @@ int Hash::to_hash(string& offset1, string& offset2, int h3, int h4) {
 int Hash::to_hash(int h1, int h2, int h3, int h4) {
   int h_final = merge_hashes(h1, h2, h3, h4);
   return h_final;
+}
+
+int Hash::letterToNum(char c) {
+  int val;
+  if (c == 'A') {
+    val = 0;
+  } else if (c == 'C') {
+    val = 1;
+  } else if (c == 'T') {
+    val = 2;
+  } else if (c == 'G') {
+    val = 3;
+  }
+  return val;
 }

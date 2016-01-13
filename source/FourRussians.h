@@ -33,7 +33,6 @@ public:
 	int* substringB;
 
 	FourRussians(string inputFileName, string outputFileName, int outputFormat, int tValue);
-	void printOut(vector<string> v);
 	void generate(int i, int tValue, vector<int>& counters);
 	int calculateTValue(int lenA, int lenB) noexcept(true);
 	int** calculateEditMatrix();

@@ -19,4 +19,5 @@ public:
 	int to_hash(string& offset1, int h2, int h3, int h4);
 	int to_hash(string& offset1, string& offset2, int h3, int h4);
 	int to_hash(int h1, int h2, int h3, int h4);
+	int letterToNum(char c);
 };

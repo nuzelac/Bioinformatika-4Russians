@@ -4,29 +4,16 @@ FourRussians::FourRussians(string inputFileName, string outputFileName, int outp
   this->outputFormat = outputFormat;
   this->inputFileName = inputFileName;
   this->outputFileName = outputFileName;
-
-  readStrings();
-
-  this->tValue = calculateTValue((int)stringA.size(), (int)stringB.size());
   this->tValue = tValue;
-
   this->hash = Hash(tValue);
 
-  int pow3 = pow(3, tValue);
-  int pow4 = pow(4, tValue);
-  int size = pow3 * pow3 * pow4 * pow4;
+  int numBlocks = getSizeBlocks();
+  downOffsets = new uint8_t[numBlocks];
+  rightOffsets = new uint8_t[numBlocks];
+  blocks = new Blok[numBlocks];
 
-  downOffsets = new uint8_t[size];
-  rightOffsets = new uint8_t[size];
-
+  readStrings();
   editStrings();
-
-  blocks = new Blok[getSizeBlocks()];
-}
-
-void FourRussians::printOut(vector<string> v) {
-  for (int i = 0; i < v.size(); i++) cout << v[i];
-  cout << endl;
 }
 
 void FourRussians::generate(int i, int tValue, vector<int>& counters) {
@@ -86,11 +73,7 @@ void FourRussians::generate(int i, int tValue, vector<int>& counters) {
 }
 
 int FourRussians::calculateTValue(int lenA, int lenB) noexcept(true) {
-  int len = 0;
-  if (lenA > lenB)
-    len = lenA;
-  else
-    len = lenB;
+  int len = max(lenA, lenB);
   double t = (log(len) / log(12)) / 2;
 
   return ((int)t + 1);
@@ -114,10 +97,6 @@ int** FourRussians::calculateEditMatrix() {
       matrix[i][j] = 0;
     }
   }
-
-  //    string s = "";
-  //    string &leftS;
-  //    string topS;
 
   int cnter = 0;
   double duration = 0;
@@ -337,33 +316,19 @@ void FourRussians::writeMinDistance(int** matrix) {
   cout << "MIN DISTANCE:" << min << endl;
 }
 
-int FourRussians::letterToNum(char c) {
-  int val;
-  if (c == 'A') {
-    val = 0;
-  } else if (c == 'C') {
-    val = 1;
-  } else if (c == 'T') {
-    val = 2;
-  } else if (c == 'G') {
-    val = 3;
-  }
-  return val;
-}
-
 void FourRussians::getsubArrays() {
   substringA = new int[stringA.size() / tValue];
   substringB = new int[stringB.size() / tValue];
   for (int i = 0; i < stringA.size() / tValue; i++) {
     substringA[i] = 0;
     for (int j = 0; j < tValue; ++j) {
-      substringA[i] = substringA[i] * 4 + letterToNum(stringA[i * tValue + j]);
+      substringA[i] = substringA[i] * 4 + hash.letterToNum(stringA[i * tValue + j]);
     }
   }
   for (int i = 0; i < stringB.size() / tValue; i++) {
     substringB[i] = 0;
     for (int j = 0; j < tValue; ++j) {
-      substringB[i] = substringB[i] * 4 + letterToNum(stringB[i * tValue + j]);
+      substringB[i] = substringB[i] * 4 + hash.letterToNum(stringB[i * tValue + j]);
     }
   }
 }
