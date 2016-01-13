@@ -17,7 +17,7 @@ public:
 	string stringA;
 	string stringB;
 	int tValue;
-	string fileName;
+	string inputFileName;
     string outputFileName;
     int outputFormat;
 
@@ -30,14 +30,12 @@ public:
 	uint8_t* downOffsets;
 	uint8_t* rightOffsets;
 
-	int maximum = 0;
-	int K;
-
 	Blok* blocks = NULL;
 
 	int* substringA;
 	int* substringB;
 
+	FourRussians(string inputFileName, string outputFileName, int outputFormat, int tValue);
 	int hashOffsetsTop(int* cnters);
 	int hashOffsetsLeft(int* cnters);
 	int format_offset(string offset);

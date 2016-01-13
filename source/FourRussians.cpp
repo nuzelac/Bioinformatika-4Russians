@@ -1,7 +1,29 @@
 #include "FourRussians.h"
 
-// int hashOffsetsTop(int* cnters);
-// int hashOffsetsLeft(int* cnters);
+FourRussians::FourRussians(string inputFileName, string outputFileName, int outputFormat, int tValue) {
+  this->outputFormat = outputFormat;
+  this->inputFileName = inputFileName;
+  this->outputFileName = outputFileName;
+
+  readStrings();
+
+  this->tValue = calculateTValue((int)stringA.size(), (int)stringB.size());
+  this->tValue = tValue;
+
+  threePowTValue = pow(3, tValue);
+  fourPowTValue = pow(4, tValue);
+  fourPowTValueSquare = fourPowTValue * fourPowTValue;
+
+  downOffsets = new uint8_t[threePowTValue * threePowTValue *
+                            fourPowTValueSquare];
+  rightOffsets = new uint8_t[threePowTValue * threePowTValue *
+                             fourPowTValueSquare];
+
+  editStrings();
+
+  blocks = new Blok[getSizeBlocks()];
+}
+
 
 int FourRussians::format_offset(string offset) {
   int result = 0;
@@ -244,7 +266,7 @@ int** FourRussians::calculateEditMatrix(int lenA, int lenB, int* substringA,
 }
 
 void FourRussians::readStrings() {
-  ifstream infile(fileName);
+  ifstream infile(inputFileName);
   if (!infile.is_open()) {
     cout << " Failed to open file" << endl;
   } else {
