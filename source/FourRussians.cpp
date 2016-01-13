@@ -15,7 +15,7 @@ FourRussians::FourRussians(string inputFileName, string outputFileName,
   int numBlocks = getSizeBlocks();
   downOffsets = new uint8_t[numBlocks];
   rightOffsets = new uint8_t[numBlocks];
-  blocks = new Blok[numBlocks];
+  blocks = new Block[numBlocks];
 
   readStrings();
   editStrings();
@@ -49,7 +49,7 @@ void FourRussians::generate(int i, int tValue, vector<int>& counters) {
     for (int i = tValue * 3; i < tValue * 4; i++)
       leftS[i - tValue * 3] = E[counters[i]];
 
-    Blok b = Blok(tValue, topS, leftS, topO, leftO);
+    Block b = Block(tValue, topS, leftS, topO, leftO);
 
     blocks[hashed] = b;
     downOffsets[hashed] = b.calcDownOffsets(tValue);

@@ -11,7 +11,7 @@
 #include <fstream>
 #include <cmath>
 #include <thread>
-#include "Blok.h"
+#include "Block.h"
 #include "Hash.h"
 
 using namespace std;
@@ -33,7 +33,7 @@ class FourRussians {
   uint8_t* downOffsets;
   uint8_t* rightOffsets;
 
-  Blok* blocks = NULL;
+  Block* blocks = NULL;
 
   int* substringA;
   int* substringB;

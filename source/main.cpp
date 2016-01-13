@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
   cout << fourRussians.getSizeBlocks() << endl;
 
   double memory =
-      sizeof(Blok) * fourRussians.getSizeBlocks() +
+      sizeof(Block) * fourRussians.getSizeBlocks() +
       fourRussians.getSizeBlocks() * sizeof(Cell) * (fourRussians.tValue + 1) * (fourRussians.tValue + 1);
   cout << "Memmory needed: " << ((memory / 1024) / 1024) << " MB" << endl;
 

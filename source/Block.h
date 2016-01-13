@@ -1,8 +1,8 @@
 /*
- * Blok.h
- * Header used to describe Blok class
- * Blok class represents one submatrix used in algorithm
- * Each Blok is consisted of Cell
+ * Block.h
+ * Header used to describe Block class
+ * Block class represents one submatrix used in algorithm
+ * Each Block is consisted of Cell
  * 
  */
 
@@ -12,19 +12,19 @@
 
 using namespace std;
 
-class Blok {
+class Block {
  public:
   int sumDown = 0;
   Cell** matrix = NULL;
   
   /*
-   * Constructors for Blok Class
-   * Each Blok is consisted of multiple cells
-   * Each Blok is representation of one submatrix
+   * Constructors for Block Class
+   * Each Block is consisted of multiple cells
+   * Each Block is representation of one submatrix
    * Four Russian method splits main matrix in submatrices (Bloks)
    */
-  Blok(int tVal, signed char* topS, signed char* leftS, int* topO, int* leftO);
-  Blok();
+  Block(int tVal, signed char* topS, signed char* leftS, int* topO, int* leftO);
+  Block();
   
   /*
    * Simple method used for printing data

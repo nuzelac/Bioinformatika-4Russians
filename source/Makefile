@@ -1,4 +1,4 @@
-OBJS = main.o Blok.o Cell.o FourRussians.o Hash.o
+OBJS = main.o Block.o Cell.o FourRussians.o Hash.o
 CC = g++
 DEBUG = -std=c++11
 CFLAGS = -c $(DEBUG) -O2 -pthread
@@ -10,13 +10,13 @@ p1 : $(OBJS)
 main.o : main.cpp FourRussians.o
 	$(CC) $(CFLAGS) main.cpp
 
-Blok.o : Blok.cpp Blok.h
-	$(CC) $(CFLAGS) Blok.cpp
+Block.o : Block.cpp Block.h
+	$(CC) $(CFLAGS) Block.cpp
 
 Cell.o : Cell.cpp Cell.h
 	$(CC) $(CFLAGS) Cell.cpp
 
-FourRussians.o : FourRussians.cpp Cell.o Blok.o Hash.o
+FourRussians.o : FourRussians.cpp Cell.o Block.o Hash.o
 	$(CC) $(CFLAGS) FourRussians.cpp
 
 Hash.o : Hash.cpp
