@@ -1,44 +1,26 @@
 // cppttest.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <map>
-#include "cppttest.h"
+#include <math.h>
+#include <memory.h>
+//#include "cppttest.h"
+#include <stdlib.h>
 #include <cstdio>
 #include <ctime>
 #include <omp.h>
 #include <unordered_map>
+#include "Blok.h"
 
 using namespace std;
 
-int tVrijednost;
+int tValue;
 
-
-class Cell {
-
-public:	
-	int value;
-	bool top;
-	bool left;
-	Cell() {};
-	Cell(int val) { value = val; }
-	
-	string writeLeft() {
-		if (left == true)
-			return "T";
-		else return "F";
-	}
-	string writeTop() {
-		if (top == true)
-			return "T";
-		else return "F";
-	}
-
-};
 
 
 int num1;
@@ -49,9 +31,9 @@ int* numB;
 int hashf(int* cnters) {
 	int numLetters = 0;
 	int numOffsets = 0;
-	for (int i = tVrijednost * 4 - 1; i >= tVrijednost * 2; i--)
-		numLetters = numLetters + cnters[i] * numA[i-tVrijednost*2];
-	for (int i = tVrijednost * 2 - 1; i >= 0; i--)
+	for (int i = tValue * 4 - 1; i >= tValue * 2; i--)
+		numLetters = numLetters + cnters[i] * numA[i-tValue*2];
+	for (int i = tValue * 2 - 1; i >= 0; i--)
 		numOffsets = numOffsets + cnters[i] * numB[i];
 
 	return num1*numLetters + numOffsets;
@@ -60,7 +42,7 @@ int hashf(int* cnters) {
 int hashOffsetsTop(int* cnters) {
 
 	int numOffsets = 0;
-	for (int i = tVrijednost - 1; i >= 0; i--)
+	for (int i = tValue - 1; i >= 0; i--)
 		numOffsets = numOffsets + cnters[i] * numB[i];
 
 	return numOffsets;
@@ -68,110 +50,21 @@ int hashOffsetsTop(int* cnters) {
 int hashOffsetsLeft(int* cnters) {
 
 	int numOffsets = 0;
-	for (int i = tVrijednost - 1; i >= 0; i--)
-		numOffsets = numOffsets + cnters[i] * numB[i+tVrijednost];
+	for (int i = tValue - 1; i >= 0; i--)
+		numOffsets = numOffsets + cnters[i] * numB[i+tValue];
 
 	return numOffsets;
 }
 int hashLetters(int* cnters) {
 
 	int numLetters = 0;
-	for (int i = tVrijednost * 2 - 1; i >= 0 ; i--)
+	for (int i = tValue * 2 - 1; i >= 0 ; i--)
 		numLetters = numLetters + cnters[i] * numA[i];
 
 	return num1*numLetters;
 }
 
-
-class Blok {
-
-public:
-	int* downOffsets;
-	int* rightOffsets;
-	int hashRightOffsets;
-	int hashDownOffsets;
-	int sumaDown = 0;
-	Cell** matrix = NULL;
-	Blok() {};
-	Blok(int tVal, signed char* topS, signed char* leftS, int* topO, int* leftO) {
-
-
-		downOffsets = new int[tVal];
-		rightOffsets = new int[tVal];
-		
-		matrix = new Cell*[tVal + 1];
-
-		for (int i = 0; i < tVal + 1; i++) {
-			matrix[i] = new Cell[tVal + 1];
-		}
-		matrix[0][0] = Cell(0);
-
-		for (int i = 1; i < tVal + 1; i++) {
-			matrix[0][i] = Cell(matrix[0][i - 1].value + topO[i - 1]);
-			matrix[0][i].left = true;
-			matrix[0][i].top = false;
-			matrix[i][0] = Cell(matrix[i - 1][0].value + leftO[i - 1]);
-			matrix[i][0].left = false;
-			matrix[i][0].top = true;
-		}
-		int min = 0;
-		for (int i = 1; i < tVal + 1; i++) {
-			for (int j = 1; j < tVal + 1; j++) {
-				if (topS[j - 1] == leftS[i - 1]) {
-
-					matrix[i][j] = Cell(matrix[i - 1][j - 1].value);
-					matrix[i][j].top = true;
-					matrix[i][j].left = true;
-				}
-
-				else if (matrix[i - 1][j - 1].value <= matrix[i - 1][j].value && matrix[i - 1][j - 1].value <= matrix[i][j - 1].value) {
-
-					matrix[i][j] = Cell(matrix[i - 1][j - 1].value + 1);
-					matrix[i][j].top = true;
-					matrix[i][j].left = true;
-				}
-				else if (matrix[i - 1][j].value <= matrix[i - 1][j - 1].value && matrix[i - 1][j].value <= matrix[i][j - 1].value) {
-
-					matrix[i][j] = Cell(matrix[i - 1][j].value + 1);
-					matrix[i][j].top = true;
-					matrix[i][j].left = false;
-				}
-				else {
-
-					matrix[i][j] = Cell(matrix[i][j - 1].value + 1);
-					matrix[i][j].top = false;
-					matrix[i][j].left = true;
-				}
-			}
-		}
-
-		
-
-		//down offsets
-		for (int i = 1; i <= tVal; i++) {
-			downOffsets[i-1] = (matrix[tVal][i].value - matrix[tVal][i - 1].value+1);
-			sumaDown = sumaDown + (matrix[tVal][i].value - matrix[tVal][i - 1].value);
-		}
-		
-		//right offsets
-		for (int i = 1; i <= tVal; i++)
-			rightOffsets[i-1] = (matrix[i][tVal].value - matrix[i - 1][tVal].value+1);
-
-		hashRightOffsets = hashOffsetsLeft(rightOffsets);
-		hashDownOffsets = hashOffsetsTop(downOffsets);
-	}
-	
-
-	void ispisiMatrixValues(int tVrijednost) {
-		for (int i = 0; i <= tVrijednost; i++) {
-			for (int j = 0; j <= tVrijednost; j++)
-				cout << matrix[i][j].value << " ";
-			cout << endl;
-		}
-		cout << endl;
-	}
-};
-void ispisi(vector<string> v) {
+void printOut(vector<string> v) {
 	for (int i = 0; i < v.size(); i++)
 		cout << v[i];
 	cout << endl;
@@ -179,14 +72,14 @@ void ispisi(vector<string> v) {
 }
 
 
-Blok *blokovi = NULL;
+Blok *blocks = NULL;
 string text;
-string nizA;
-string nizB;
+string stringA;
+string stringB;
 
 signed char* E = new signed char[4];
 int* O = new int[3];
-ofstream outputFile("E:\program3data.txt");
+ofstream outputFile("program3data.txt");
 //...
 
 string getString(vector<string> combo) {
@@ -198,9 +91,9 @@ string getString(vector<string> combo) {
 
 
 
-void pretprocesiranje() {
+void preProcess() {
 
-	blokovi = new Blok[(int)(pow(3,tVrijednost*2)*pow(4,tVrijednost*2))];
+	blocks = new Blok[(int)(pow(3,tValue*2)*pow(4,tValue*2))];
 	E[0] = 'A';
 	E[1] = 'C';
 	E[2] = 'T';
@@ -210,16 +103,16 @@ void pretprocesiranje() {
 	O[2] = 1;
 	
 
-	int* counters = new int[tVrijednost*4];
-	for (int i = 0; i < tVrijednost * 4; i++)
+	int* counters = new int[tValue*4];
+	for (int i = 0; i < tValue* 4; i++)
 		counters[i] = 0;
-	int start = tVrijednost * 4 - 1;
+	int start = tValue * 4 - 1;
 	int hash = 0;
 	int cnter = 0;
-	int* topO = new int[tVrijednost];
-	int* leftO = new int[tVrijednost];
-	signed char* topS = new signed char[tVrijednost];
-	signed char* leftS = new signed char[tVrijednost];
+	int* topO = new int[tValue];
+	int* leftO = new int[tValue];
+	signed char* topS = new signed char[tValue];
+	signed char* leftS = new signed char[tValue];
 	
 	std::clock_t timer;
 	double duration;
@@ -229,45 +122,45 @@ void pretprocesiranje() {
 	while (counters[0] <= 2) {
 		cnter++;
 		hash = hashf(counters);
-		for (int i = 0; i < tVrijednost; i++)
+		for (int i = 0; i < tValue; i++)
 			topO[i] = O[counters[i]];
-		for (int i = tVrijednost; i < tVrijednost * 2; i++)
-			leftO[i-tVrijednost] = O[counters[i]];
-		for (int i = tVrijednost*2; i < tVrijednost*3; i++)
-			topS[i-tVrijednost*2] = E[counters[i]];
-		for (int i = tVrijednost*3; i < tVrijednost * 4; i++)
-			leftS[i-tVrijednost*3] = E[counters[i]];
-		blokovi[hash] = Blok(tVrijednost,topS, leftS, topO, leftO );
+		for (int i = tValue; i < tValue * 2; i++)
+			leftO[i-tValue] = O[counters[i]];
+		for (int i = tValue*2; i < tValue*3; i++)
+			topS[i-tValue*2] = E[counters[i]];
+		for (int i = tValue*3; i < tValue * 4; i++)
+			leftS[i-tValue*3] = E[counters[i]];
+		blocks[hash] = Blok(tValue,topS, leftS, topO, leftO );
 		counters[start]++;
 		if (counters[start] > 3) {
 			counters[start] = 0;
 			bool repeat = true;
-			int pomak = 1;
+			int offset = 1;
 			
 			while (repeat) {
-				if ((start - pomak) > (start - 2 * tVrijednost)) {
-					if (counters[start - pomak] < 3) {
-						counters[start - pomak]++;
+				if ((start - offset) > (start - 2 * tValue)) {
+					if (counters[start - offset] < 3) {
+						counters[start - offset]++;
 						repeat = false;
 					}
 					else {
-						counters[start - pomak] = 0;
-						pomak++;
+						counters[start - offset] = 0;
+						offset++;
 					}
 				}
 				else {
-					if (counters[start - pomak] < 2) {
-						counters[start - pomak]++;
+					if (counters[start - offset] < 2) {
+						counters[start - offset]++;
 						repeat = false;
 					}
 					else {
-						if (start - pomak == 0) {
+						if (start - offset == 0) {
 							repeat = false;
 							counters[0] = 3;
 						}
 						else {
-							counters[start - pomak] = 0;
-							pomak++;
+							counters[start - offset] = 0;
+							offset++;
 						}
 					}
 				}
@@ -300,20 +193,20 @@ int calculateTValue(int lenA, int lenB) noexcept(true) {
 	return ((int)t + 1);
 }
 
-int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA, int* podnizB) {
+int** calculateDistanceMatrix(int lenA, int lenB, int* subStringA, int* subStringB) {
 	
-	int** matrica = NULL;
-	matrica = new int*[lenB / tVrijednost];
-	const int sizeInt = 4 * tVrijednost;
+	int** matrix = NULL;
+	matrix = new int*[lenB / tValue];
+	const int sizeInt = 4 * tValue;
 
 	/* Your algorithm here */
 
 
 
-	int lenb = lenB / tVrijednost;
-	int lena = lenA / tVrijednost;
+	int lenb = lenB / tValue;
+	int lena = lenA / tValue;
 	for (int h = 0; h < lenb; h++)
-		matrica[h] = new int[lena];
+		matrix[h] = new int[lena];
 
 
 
@@ -321,8 +214,8 @@ int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA, int* podnizB)
 
 
 
-	int* s = new int[tVrijednost * 4];
-	int* sL = new int[tVrijednost * 2];
+	int* s = new int[tValue * 4];
+	int* sL = new int[tValue * 2];
 
 
 	
@@ -331,62 +224,62 @@ int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA, int* podnizB)
 	std::clock_t start;
 	start = std::clock();
 	int nizcnter = 0;
-	for (int i = 0; i < tVrijednost*2; i++)
+	for (int i = 0; i < tValue*2; i++)
 		s[i] = 2;	
-	for (int i = tVrijednost * 2; i < tVrijednost * 3; i++)
-		s[i] = podnizA[nizcnter++];
+	for (int i = tValue * 2; i < tValue * 3; i++)
+		s[i] = subStringA[nizcnter++];
 	nizcnter = 0;
-	for (int i = tVrijednost * 3; i < tVrijednost * 4; i++)
-		s[i] = podnizB[nizcnter++];
+	for (int i = tValue * 3; i < tValue * 4; i++)
+		s[i] = subStringB[nizcnter++];
 	
-	matrica[0][0] = hashf(s);
+	matrix[0][0] = hashf(s);
 	
 	cout << endl;
 	Blok b,bTop,bLeft;
 	for (int k = 1; k < lena; k++) {
-		idx = k*tVrijednost;
-		b = blokovi[matrica[0][k - 1]];
-		memcpy(s + tVrijednost, b.rightOffsets, sizeInt);
+		idx = k*tValue;
+		b = blocks[matrix[0][k - 1]];
+		memcpy(s + tValue, b.rightOffsets, sizeInt);
 		
-		for (int i = tVrijednost * 2; i < tVrijednost * 3; i++)
-			s[i] = podnizA[idx++];
-		matrica[0][k] = hashf(s);
+		for (int i = tValue * 2; i < tValue * 3; i++)
+			s[i] = subStringA[idx++];
+		matrix[0][k] = hashf(s);
 		
 		
 	}
 	
 	
 	for (int i = 1; i < lenb; i++) {
-		idx = i*tVrijednost;
+		idx = i*tValue;
 		
-		b = blokovi[matrica[i - 1][0]];
+		b = blocks[matrix[i - 1][0]];
 		memcpy(s, b.downOffsets, sizeInt);
 		
-		for (int k = tVrijednost; k < tVrijednost * 2; k++)
+		for (int k = tValue; k < tValue * 2; k++)
 			s[k] = 2;
 		nizcnter = 0;
-		for (int k = tVrijednost * 2; k < tVrijednost * 3; k++)
-			s[k] = podnizA[nizcnter++];
+		for (int k = tValue * 2; k < tValue * 3; k++)
+			s[k] = subStringA[nizcnter++];
 		
-		for (int k = tVrijednost * 3; k < tVrijednost * 4; k++) {
-			s[k] = podnizB[idx++];
-			sL[k - tVrijednost * 2] = s[k];
+		for (int k = tValue * 3; k < tValue * 4; k++) {
+			s[k] = subStringB[idx++];
+			sL[k - tValue * 2] = s[k];
 		}
 		
 		//cout << i << endl;
-		matrica[i][0] = hashf(s);
+		matrix[i][0] = hashf(s);
 		
 		if (cnter % 1000 == 0) {
 			cout << cnter << endl;
 			duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 			start = std::clock();
-			std::cout << "\Computation of 1000 blocks takes time:" << duration << " s \n";
+			std::cout << "Computation of 1000 blocks takes time:" << duration << " s \n";
 		}
 		cnter++;
 
 		
 		for (int j = 1; j < lena; j++) {
-			 idx = j*tVrijednost;
+			 idx = j*tValue;
 			 //b = blokovi[matrica[i - 1][j]];
 			 //memcpy(s, b.downOffsets, sizeInt);
 			
@@ -394,14 +287,14 @@ int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA, int* podnizB)
 			 //b = blokovi[matrica[i][j - 1]];
 			
 			 //memcpy(s+tVrijednost, b.rightOffsets, sizeInt);
-			 for (int k = tVrijednost * 2; k < tVrijednost * 3; k++) {
-				 s[k] = podnizA[idx++];
-				 sL[k - tVrijednost * 2] = s[k];
+			 for (int k = tValue * 2; k < tValue * 3; k++) {
+				 s[k] = subStringA[idx++];
+				 sL[k - tValue * 2] = s[k];
 			 }
-			 bTop = blokovi[matrica[i - 1][j]];
-			 bLeft = blokovi[matrica[i][j - 1]];
+			 bTop = blocks[matrix[i - 1][j]];
+			 bLeft = blocks[matrix[i][j - 1]];
 			 
-			 matrica[i][j] = bTop.hashDownOffsets + bLeft.hashRightOffsets + hashLetters(sL);
+			 matrix[i][j] = bTop.hashDownOffsets + bLeft.hashRightOffsets + hashLetters(sL);
 			// matrica[i][j] = hashf(s);
 		}
 
@@ -411,12 +304,13 @@ int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA, int* podnizB)
 
 	}
 	
-	return matrica;
+	return matrix;
 }
 
 
-void ucitajNizove() {
-	ifstream infile("E:/nizoviBaza.txt");
+void readStrings(string fileName) {
+	//ifstream infile("primjer-10000.in");
+	ifstream infile(fileName);
 	if (!infile.is_open()) {
 		cout << " Failed to open file" << endl;
 	}
@@ -428,9 +322,9 @@ void ucitajNizove() {
 	{
 		getline(infile, text); // Saves the line in STRING.
 		if (cnt == 0)
-			nizA = text;
+			stringA = text;
 		else if (cnt == 1)
-			nizB = text;
+			stringB = text;
 		cnt++;
 
 		//cout << text << endl; // Prints our STRING.
@@ -439,71 +333,71 @@ void ucitajNizove() {
 }
 
 size_t getSizeBlokovi() {
-	size_t val = pow(3, tVrijednost * 2)*pow(4, tVrijednost * 2);
+	size_t val = pow(3, tValue * 2)*pow(4, tValue * 2);
 	return val;
 }
 
-void urediNizove() {
-	while (nizA.size() % tVrijednost != 0)
-		nizA = nizA.substr(0, nizA.size() - 1);
-	while (nizB.size() % tVrijednost != 0)
-		nizB = nizB.substr(0, nizB.size() - 1);
+void editStrings() {
+	while (stringA.size() % tValue != 0)
+		stringA = stringA.substr(0, stringA.size() - 1);
+	while (stringB.size() % tValue != 0)
+		stringB = stringB.substr(0, stringB.size() - 1);
 }
-int* podnizA;
-int* podnizB;
-void editScript(int** matrica) {
+int* subStringA;
+int* subStringB;
+void editScript(int** Matrix) {
 	
 	
 	
 
-	int i = nizB.size()/tVrijednost-1; // {i = ROWS in int**}
-	int j = nizA.size()/tVrijednost-1; // {j = COLS in int**}
-	int a = tVrijednost;
-	int b = tVrijednost;
-	int cnterB = nizB.size()-1;
-	int cnterA = nizA.size()-1;
+	int i = stringB.size()/tValue-1; // {i = ROWS in int**}
+	int j = stringA.size()/tValue-1; // {j = COLS in int**}
+	int a = tValue;
+	int b = tValue;
+	int cnterB = stringB.size()-1;
+	int cnterA = stringA.size()-1;
 	Cell** matrix;
 	//a = 0 -> got top in matrica {a = ROWS in Cell**}
 	//b = 0 - > got left in matrica {b = COLS in Cell**}
 	int cnter = 0;
 	int size;
-	if (nizA.size() > nizB.size())
-		size = nizA.size();
-	else size = nizB.size();
+	if (stringA.size() > stringB.size())
+		size = stringA.size();
+	else size = stringB.size();
 	int val = size * 2;
-	vector<char> prvi(val);
-	vector<char> drugi(val);
-	vector<char> srednji(val);
+	vector<char> first(val);
+	vector<char> second(val);
+	vector<char> middle(val);
 
 	cout << i << " " << j << endl;
 	while ( (i+j)!=0 ) 
 	{				
-		matrix = blokovi[matrica[i][j]].matrix;
+		matrix = blocks[Matrix[i][j]].matrix;
 		while (true) {
 			if (matrix[a][b].top == true && matrix[a][b].left == true) {
 				a--;
 				b--;
-				prvi.insert(prvi.begin(), nizA[cnterA]);
-				drugi.insert(drugi.begin(), nizB[cnterB]);
-				if (nizA[cnterA] == nizB[cnterB]) {
-					srednji.insert(srednji.begin(), '\|');
+				first.insert(first.begin(), stringA[cnterA]);
+				second.insert(second.begin(), stringB[cnterB]);
+				if (stringA[cnterA] == stringB[cnterB]) {
+					middle.insert(middle.begin(), '|');
 				}
-				else srednji.insert(srednji.begin(), '.');
+				else middle.insert(middle.begin(), '.');
 				cnterA--;
 				cnterB--;
 			}
 			else if (matrix[a][b].top == true) {
 				a--;
-				drugi.insert(drugi.begin(), nizB[cnterB]);
-				prvi.insert(prvi.begin(), '-');
-				srednji.insert(srednji.begin(), ' ');
+				second.insert(second.begin(), stringB[cnterB]);
+				first.insert(first.begin(), '-');
+				middle.insert(middle.begin(), ' ');
 				cnterB--;
 			}
 			else {
 				b--;
-				drugi.insert(drugi.begin(), '-');
-				prvi.insert(prvi.begin(), nizA[cnterA]);
-				srednji.insert(srednji.begin(), ' ');
+				second.insert(second.begin(), '-');
+				first.insert(first.begin(), stringA[cnterA]);
+				middle.insert(middle.begin(), ' ');
 				cnterA--;
 			}
 			cnter++;
@@ -529,57 +423,57 @@ void editScript(int** matrica) {
 			if (i == 0) {
 				j--;
 				a = 0;
-				b = tVrijednost;
+				b = tValue;
 			} else if(j == 0) {
 				i--;
 				b = 0;
-				a = tVrijednost;
+				a = tValue;
 			}
 			else {
 				i--;
 				j--;
-				a = tVrijednost;
-				b = tVrijednost;
+				a = tValue;
+				b = tValue;
 			}
 			
 		}
 		else if (a == 0) {
 				i--;
-				a = tVrijednost;			
+				a = tValue;			
 		}
 		else if (b == 0) {
 				j--;
-				b = tVrijednost;			
+				b = tValue;			
 		}
 		//cout << i << " " << j << endl;
 	}
 	
-	matrix = blokovi[matrica[0][0]].matrix;
+	matrix = blocks[Matrix[0][0]].matrix;
 	while (true) {
 		if (matrix[a][b].top == true && matrix[a][b].left == true) {
 			a--;
 			b--;
-			prvi.insert(prvi.begin(), nizA[cnterA]);
-			drugi.insert(drugi.begin(), nizB[cnterB]);
-			if (nizA[cnterA] == nizB[cnterB]) {
-				srednji.insert(srednji.begin(), '\|');
+			first.insert(first.begin(), stringA[cnterA]);
+			second.insert(second.begin(), stringB[cnterB]);
+			if (stringA[cnterA] == stringB[cnterB]) {
+				middle.insert(middle.begin(), '|');
 			}
-			else srednji.insert(srednji.begin(), '.');
+			else middle.insert(middle.begin(), '.');
 			cnterA--;
 			cnterB--;
 		}
 		else if (matrix[a][b].top == true) {
 			a--;
-			drugi.insert(drugi.begin(), nizB[cnterB]);
-			prvi.insert(prvi.begin(), '-');
-			srednji.insert(srednji.begin(), ' ');
+			second.insert(second.begin(), stringB[cnterB]);
+			first.insert(first.begin(), '-');
+			middle.insert(middle.begin(), ' ');
 			cnterB--;
 		}
 		else {
 			b--;
-			drugi.insert(drugi.begin(), '-');
-			prvi.insert(prvi.begin(), nizA[cnterA]);
-			srednji.insert(srednji.begin(), ' ');
+			second.insert(second.begin(), '-');
+			first.insert(first.begin(), stringA[cnterA]);
+			middle.insert(middle.begin(), ' ');
 			cnterA--;
 		}
 		cnter++;
@@ -604,16 +498,16 @@ void editScript(int** matrica) {
 	else x = cnter;
 	for (int j = 0; j < cnter; j = j + x) {
 		outputFile << "Lines:" << j << " - " << (j+x) << endl;
-		for (int i = j; i < j + x; i++) {
-			outputFile << prvi[i];
+		for (int i = j; i < j + x && i < cnter ;i++) {
+			outputFile << first[i];
 	}
 	outputFile << endl;
-	for (int i = j; i < j + x; i++) {
-		outputFile << srednji[i];
+	for (int i = j; i < j + x && i < cnter; i++) {
+		outputFile << middle[i];
 	}
 	outputFile << endl;
-	for (int i = j; i < j + x; i++) {
-		outputFile << drugi[i];
+	for (int i = j; i < j + x && i < cnter; i++) {
+		outputFile << second[i];
 	}
 	outputFile << endl;
 	}
@@ -622,14 +516,14 @@ void editScript(int** matrica) {
 	
 }
 
-void writeMinDistance(int** matrica) {
+void writeMinDistance(int** matrix) {
 
 	int min = 0;
 
-	for (int j = 0; j < nizA.size() / tVrijednost; j++) {
-		min = min + blokovi[matrica[nizB.size() / tVrijednost - 1][j]].sumaDown;
+	for (int j = 0; j < stringA.size() / tValue; j++) {
+		min = min + blocks[matrix[stringB.size() / tValue - 1][j]].sumaDown;
 	}
-	min = min + nizB.size();
+	min = min + stringB.size();
 	cout << "MIN DISTANCE:" << min << endl;
 
 }
@@ -647,52 +541,96 @@ int getNumfromString(char s) {
 
 
 void getsubArrays() {
-	podnizA = new int[nizA.size()];
-	podnizB = new int[nizB.size()];
+	subStringA = new int[stringA.size()];
+	subStringB = new int[stringB.size()];
 	
-	for (int i = 0; i < nizA.size(); i++) {
-		podnizA[i] = getNumfromString(nizA[i]);
+	for (int i = 0; i < stringA.size(); i++) {
+		subStringA[i] = getNumfromString(stringA[i]);
 	}
-	for (int i = 0; i < nizB.size(); i++) {
-		podnizB[i] = getNumfromString(nizB[i]);
+	for (int i = 0; i < stringB.size(); i++) {
+		subStringB[i] = getNumfromString(stringB[i]);
 	}
 }
-int main()
+int main(int argc, char** argv)
 {
+	//int c;
+	string fileName;
+	string tValueString;
+	int value;
+	vector<string> cmdLineArgs(argv, argv+argc);
+	
+	/*
+	 * Arguments passed:
+	 * File name - file which is consisted of two string 
+	 * 			   (which will be aligned)
+	 * 
+	 * t - value which will be used in algorithm
+	 * 
+	 */
+	 
+	for(auto& arg : cmdLineArgs)
+	{
+		if(arg == "--help" || arg == "-help") {
+			std::cout << "\n";
+			std::cout << "To run program: progName outputFile tValue\n";
+			std::cout << "If second value is string 0 will be taken for tValue\n";
+			std::cout << "\n";
+			exit(0);
+		}
+	}
+	 
+	 
+	 
+	 if(argc != 3) {
+		std::cout << "\n";
+		std::cout << "Run progName --help or progName -help\n";
+		std::cout << "To see how to properly run code\n";
+		std::cout << "\n";
+		exit(1);
+	 } else {
+		 fileName = argv[1];
+		 tValueString = argv[2];
+		 value = atoi(tValueString.c_str());;
+		 
+		 std::cout << fileName;
+		 std::cout << value;
+		 //exit(0);
+	 }
+	
 	std::clock_t start;
 	double duration;
 	
 
-	ucitajNizove();
-	tVrijednost = calculateTValue(nizA.size(), nizB.size());
-	tVrijednost = 2;
-	urediNizove();
+	readStrings(fileName);
+	tValue = calculateTValue(stringA.size(), stringB.size());
+	tValue = value;
+	editStrings();
 	//cout << "Prvi string:" << nizA << endl;
 	//cout << "Drugi string:" << nizB << endl;
 
-	cout << "T value;" << tVrijednost << endl;
+	cout << "T value;" << tValue << endl;
 	cout << getSizeBlokovi() << endl;
 	//getchar() ;
 	double memory = sizeof(Blok) * getSizeBlokovi();
 	cout << "Memmory needed: " << ((memory / 1024) / 1024) << " MB" << endl;
-	blokovi = new Blok[getSizeBlokovi()];
+	blocks = new Blok[getSizeBlokovi()];
 
-	num1 = (pow(3, tVrijednost * 2));
-	numx = tVrijednost * 2 - 1;
-	numy = tVrijednost * 2 - 1;
-	numA = new int[tVrijednost * 2];
-	numB = new int[tVrijednost * 2];
-	for (int i = tVrijednost * 2 - 1; i >= 0; i--) 
+	num1 = (pow(3, tValue * 2));
+	numx = tValue * 2 - 1;
+	numy = tValue * 2 - 1;
+	numA = new int[tValue * 2];
+	numB = new int[tValue * 2];
+	for (int i = tValue * 2 - 1; i >= 0; i--) 
 		numA[i] = pow(4, (numx - i));
 	
-	for (int i = tVrijednost * 2 - 1; i >= 0; i--)
+	for (int i = tValue * 2 - 1; i >= 0; i--)
 		numB[i]=pow(3, (numy - i));
 
 	cout << "Preprocessing STARTED" << endl;
 
 
 	start = std::clock();
-	pretprocesiranje();
+	preProcess();
 	;
 	/*
 	string s = "1111ATTC";
@@ -712,7 +650,7 @@ int main()
 	/* Your algorithm here */
 
 
-	int** matricaUdaljenosti = calculatematricaUdaljenost(nizA.size(), nizB.size(), podnizA, podnizB);
+	int** matricaUdaljenosti = calculateDistanceMatrix(stringA.size(), stringB.size(), subStringA, subStringB);
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
 	std::cout << "Duration of calculating min distance:" << duration << '\n';
@@ -734,6 +672,6 @@ int main()
 	getchar();
 
 	// delete all allocated memory
-	delete[] blokovi;
+	delete[] blocks;
 	return 0;
 }
