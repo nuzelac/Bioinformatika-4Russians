@@ -17,107 +17,105 @@ using namespace std;
 
 std::map<int, string> hashevi;
 string text;
-string nizA;
-string nizB;
-int tVrijednost;
+string stringA;
+string stringB;
+int tValue;
 
 signed char* E = new signed char[4];
 int* O = new int[3];
-ofstream outputFile(
-    "/Volumes/Zvijer/Google "
-    "Drive/FER/BIO/bioinformatika4russians/source/bla.txt");
+ofstream outputFile("bla.txt");
 
-int triNaTVrijednost;
-int cetiriNaTVrijenost;
-int cetiriNaTVrijenostNaKvadrat;
+int threePowTValue;
+int fourPowTValue;
+int fourPowTValueSquare;
 uint8_t* downOffsets;
 uint8_t* rightOffsets;
 
-int pretvori_pomak(string pomak) {
-  int rez = 0;
-  int potencija = 3;
-  for (int i = 0; i < pomak.size(); ++i) {
+int format_offset(string offset) {
+  int result = 0;
+  int toPower = 3;
+  for (int i = 0; i < offset.size(); ++i) {
     int val;
-    if (pomak[i] == '-') {
+    if (offset[i] == '-') {
       val = 0;
       i++;
-    } else if (pomak[i] == '0') {
+    } else if (offset[i] == '0') {
       val = 1;
     } else {
       val = 2;
     }
 
-    rez = rez * potencija + val;
+    result = result * toPower + val;
   }
 
-  return rez;
+  return result;
 }
 
-inline int pretvori_slova(string& slova) {
-  int rez = 0;
-  int potencija = 4;
-  for (int i = 0; i < slova.size(); ++i) {
+inline int format_letters(string& letters) {
+  int result = 0;
+  int toPower = 4;
+  for (int i = 0; i < letters.size(); ++i) {
     int val;
-    if (slova[i] == 'A') {
+    if (letters[i] == 'A') {
       val = 0;
-    } else if (slova[i] == 'C') {
+    } else if (letters[i] == 'C') {
       val = 1;
-    } else if (slova[i] == 'T') {
+    } else if (letters[i] == 'T') {
       val = 2;
-    } else if (slova[i] == 'G') {
+    } else if (letters[i] == 'G') {
       val = 3;
     }
 
-    rez = rez * potencija + val;
+    result = result * toPower + val;
   }
 
-  return rez;
+  return result;
 }
 
-int maksimalni = 0;
+int maximum = 0;
 int K;
 
-inline int spoji_hasheve(int h1, int h2, int h3, int h4) {
-  return h1 * triNaTVrijednost * cetiriNaTVrijenostNaKvadrat +
-         h2 * cetiriNaTVrijenostNaKvadrat + h3 * cetiriNaTVrijenost + h4;
+inline int merge_hashes(int h1, int h2, int h3, int h4) {
+  return h1 * threePowTValue * fourPowTValueSquare +
+         h2 * fourPowTValueSquare + h3 * fourPowTValue + h4;
 }
 
-int u_hash(string pomak1, string pomak2, string& a1, string& a2) {
-  int h1 = pretvori_pomak(pomak1);
-  int h2 = pretvori_pomak(pomak2);
-  int h3 = pretvori_slova(a1);
-  int h4 = pretvori_slova(a2);
+int to_hash(string offset1, string offset2, string& a1, string& a2) {
+  int h1 = format_offset(offset1);
+  int h2 = format_offset(offset2);
+  int h3 = format_letters(a1);
+  int h4 = format_letters(a2);
 
-  int h_konacno = spoji_hasheve(h1, h2, h3, h4);
+  int h_konacno = merge_hashes(h1, h2, h3, h4);
 
   return h_konacno;
 }
 
-int u_hash(int h1, string pomak2, int h3, int h4) {
-  int h2 = pretvori_pomak(pomak2);
+int to_hash(int h1, string offset2, int h3, int h4) {
+  int h2 = format_offset(offset2);
 
-  int h_konacno = spoji_hasheve(h1, h2, h3, h4);
-  return h_konacno;
+  int h_final = merge_hashes(h1, h2, h3, h4);
+  return h_final;
 }
 
-int u_hash(string pomak1, int h2, int h3, int h4) {
-  int h1 = pretvori_pomak(pomak1);
+int to_hash(string offset1, int h2, int h3, int h4) {
+  int h1 = format_offset(offset1);
 
-  int h_konacno = spoji_hasheve(h1, h2, h3, h4);
-  return h_konacno;
+  int h_final = merge_hashes(h1, h2, h3, h4);
+  return h_final;
 }
 
-int u_hash(string pomak1, string pomak2, int h3, int h4) {
-  int h1 = pretvori_pomak(pomak1);
-  int h2 = pretvori_pomak(pomak2);
+int to_hash(string offset1, string offset2, int h3, int h4) {
+  int h1 = format_offset(offset1);
+  int h2 = format_offset(offset2);
 
-  int h_konacno = spoji_hasheve(h1, h2, h3, h4);
-  return h_konacno;
+  int h_final = merge_hashes(h1, h2, h3, h4);
+  return h_final;
 }
 
-int u_hash(int h1, int h2, int h3, int h4) {
-  int h_konacno = spoji_hasheve(h1, h2, h3, h4);
-  return h_konacno;
+int to_hash(int h1, int h2, int h3, int h4) {
+  int h_final = merge_hashes(h1, h2, h3, h4);
+  return h_final;
 }
 
 class Cell {
@@ -146,7 +144,7 @@ class Blok {
  public:
   uint8_t downOffsets = 0;
   uint8_t rightOffsets = 0;
-  int sumaDown = 0;
+  int sumDown = 0;
   Cell** matrix = NULL;
   Blok(){};
   Blok(int tVal, signed char* topS, signed char* leftS, int* topO, int* leftO) {
@@ -195,7 +193,7 @@ class Blok {
     for (int i = 1; i <= tVal; i++) {
       downOffsets = downOffsets * 3 +
                     (matrix[tVal][i].value - matrix[tVal][i - 1].value + 1);
-      sumaDown = sumaDown + (matrix[tVal][i].value - matrix[tVal][i - 1].value);
+      sumDown = sumDown + (matrix[tVal][i].value - matrix[tVal][i - 1].value);
     }
 
     // right offsets
@@ -204,7 +202,7 @@ class Blok {
                      (matrix[i][tVal].value - matrix[i - 1][tVal].value + 1);
   }
 
-  string ispisi(vector<string> offsetA, vector<string> offsetB, string topS,
+  string printOut(vector<string> offsetA, vector<string> offsetB, string topS,
                 string leftS) {
     string s = "";
     for (int i = 0; i < offsetA.size(); i++) s = s + offsetA[i];
@@ -216,7 +214,7 @@ class Blok {
   int getDownOffsets(int tVal) { return downOffsets; }
   int getRightOffsets(int tVal) { return rightOffsets; }
 };
-void ispisi(vector<string> v) {
+void printOut(vector<string> v) {
   for (int i = 0; i < v.size(); i++) cout << v[i];
   cout << endl;
 }
@@ -227,19 +225,19 @@ string getString(vector<string> combo) {
   return s;
 }
 
-Blok* blokovi = NULL;
+Blok* blocks = NULL;
 
-void generiraj(int i, int tVrijednost, vector<int>& counters) {
-  if (i == tVrijednost * 4) {
-    int* topO = new int[tVrijednost];
-    int* leftO = new int[tVrijednost];
-    signed char* topS = new signed char[tVrijednost];
-    signed char* leftS = new signed char[tVrijednost];
+void generate(int i, int tValue, vector<int>& counters) {
+  if (i == tValue * 4) {
+    int* topO = new int[tValue];
+    int* leftO = new int[tValue];
+    signed char* topS = new signed char[tValue];
+    signed char* leftS = new signed char[tValue];
 
     string s[4];
     for (int k = 0; k < 4; ++k) {
       s[k] = "";
-      for (int i = tVrijednost * k; i < tVrijednost * (k + 1); ++i) {
+      for (int i = tValue * k; i < tValue * (k + 1); ++i) {
         if (k < 2) {
           s[k] += to_string(O[counters[i]]);
         } else {
@@ -247,22 +245,22 @@ void generiraj(int i, int tVrijednost, vector<int>& counters) {
         }
       }
     }
-    int hashirano = u_hash(s[0], s[1], s[2], s[3]);
+    int hashed = to_hash(s[0], s[1], s[2], s[3]);
 
-    for (int i = 0; i < tVrijednost; i++) topO[i] = O[counters[i]];
-    for (int i = tVrijednost; i < tVrijednost * 2; i++)
-      leftO[i - tVrijednost] = O[counters[i]];
-    for (int i = tVrijednost * 2; i < tVrijednost * 3; i++)
-      topS[i - tVrijednost * 2] = E[counters[i]];
-    for (int i = tVrijednost * 3; i < tVrijednost * 4; i++)
-      leftS[i - tVrijednost * 3] = E[counters[i]];
+    for (int i = 0; i < tValue; i++) topO[i] = O[counters[i]];
+    for (int i = tValue; i < tValue * 2; i++)
+      leftO[i - tValue] = O[counters[i]];
+    for (int i = tValue * 2; i < tValue * 3; i++)
+      topS[i - tValue * 2] = E[counters[i]];
+    for (int i = tValue * 3; i < tValue * 4; i++)
+      leftS[i - tValue * 3] = E[counters[i]];
 
-    Blok b = Blok(tVrijednost, topS, leftS, topO, leftO);
+    Blok b = Blok(tValue, topS, leftS, topO, leftO);
 
-    blokovi[hashirano] = b;
-    downOffsets[hashirano] = b.downOffsets;
-    rightOffsets[hashirano] = b.rightOffsets;
-    printf("%d %d\n", downOffsets[hashirano], rightOffsets[hashirano]);
+    blocks[hashed] = b;
+    downOffsets[hashed] = b.downOffsets;
+    rightOffsets[hashed] = b.rightOffsets;
+    printf("%d %d\n", downOffsets[hashed], rightOffsets[hashed]);
 
     delete[] topO;
     delete[] leftO;
@@ -271,16 +269,16 @@ void generiraj(int i, int tVrijednost, vector<int>& counters) {
 
     return;
   } else {
-    bool generiraj_slova = i >= tVrijednost * 2;
-    int k = generiraj_slova ? 4 : 3;
+    bool generate_letters = i >= tValue * 2;
+    int k = generate_letters ? 4 : 3;
 
     for (int l = 0; l < k; ++l) {
-      if (generiraj_slova) {
+      if (generate_letters) {
         counters[i] = l;
       } else {
         counters[i] = l;
       }
-      generiraj(i + 1, tVrijednost, counters);
+      generate(i + 1, tValue, counters);
     }
   }
 }
@@ -296,20 +294,20 @@ int calculateTValue(int lenA, int lenB) noexcept(true) {
   return ((int)t + 1);
 }
 
-int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA,
-                                 int* podnizB) {
-  int** matrica = NULL;
-  matrica = new int*[lenB / tVrijednost];
+int** calculateEditMatrix(int lenA, int lenB, int* substringA,
+                                 int* substringB) {
+  int** matrix = NULL;
+  matrix = new int*[lenB / tValue];
 
   /* Your algorithm here */
 
-  int lenb = lenB / tVrijednost;
-  int lena = lenA / tVrijednost;
-  for (int h = 0; h < lenb; h++) matrica[h] = new int[lena];
+  int lenb = lenB / tValue;
+  int lena = lenA / tValue;
+  for (int h = 0; h < lenb; h++) matrix[h] = new int[lena];
 
   for (int i = 0; i < lenb; i++) {
     for (int j = 0; j < lena; j++) {
-      matrica[i][j] = 0;
+      matrix[i][j] = 0;
     }
   }
 
@@ -323,39 +321,39 @@ int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA,
   start = std::clock();
   string sL = "";
   string sT = "";
-  for (int k = 0; k < tVrijednost; k++) sT = sT + "1";
-  for (int k = 0; k < tVrijednost; k++) sL = sL + "1";
-  int leftS = podnizB[0];
-  int topS = podnizA[0];
+  for (int k = 0; k < tValue; k++) sT = sT + "1";
+  for (int k = 0; k < tValue; k++) sL = sL + "1";
+  int leftS = substringB[0];
+  int topS = substringA[0];
   //    s = sT + sL + topS + leftS;
 
-  int hashirano = u_hash(sT, sL, topS, leftS);
+  int hashed = to_hash(sT, sL, topS, leftS);
 
   printf("lena %d lenb %d\n", lena, lenb);
 
-  matrica[0][0] = hashirano;
+  matrix[0][0] = hashed;
   for (int k = 1; k < lena; k++) {
-    topS = podnizA[k];
-    hashirano =
-        u_hash(sT, blokovi[matrica[0][k - 1]].rightOffsets, topS, leftS);
-    matrica[0][k] = hashirano;
+    topS = substringA[k];
+    hashed =
+        to_hash(sT, blocks[matrix[0][k - 1]].rightOffsets, topS, leftS);
+    matrix[0][k] = hashed;
   }
-  int initialtopS = podnizA[0];
+  int initialtopS = substringA[0];
 
   int maks = 0;
-  for (int i = 0; i < triNaTVrijednost * triNaTVrijednost * cetiriNaTVrijenost *
-                          cetiriNaTVrijenost;
+  for (int i = 0; i < threePowTValue * threePowTValue * fourPowTValue *
+                          fourPowTValue;
        ++i) {
-    if (blokovi[i].downOffsets > maks) {
-      maks = blokovi[i].rightOffsets;
+    if (blocks[i].downOffsets > maks) {
+      maks = blocks[i].rightOffsets;
     }
   }
 
   for (int i = 1; i < lenb; i++) {
-    leftS = podnizB[i];
+    leftS = substringB[i];
 
-    hashirano = u_hash(downOffsets[matrica[i - 1][0]], sL, initialtopS, leftS);
-    matrica[i][0] = hashirano;
+    hashed = to_hash(downOffsets[matrix[i - 1][0]], sL, initialtopS, leftS);
+    matrix[i][0] = hashed;
     if (cnter % 1000 == 0) {
       cout << cnter << endl;
       duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
@@ -366,16 +364,16 @@ int** calculatematricaUdaljenost(int lenA, int lenB, int* podnizA,
     cnter++;
 
     for (int j = 1; j < lena; j++) {
-      matrica[i][j] =
-          spoji_hasheve(downOffsets[matrica[i - 1][j]],
-                        rightOffsets[matrica[i][j - 1]], podnizA[j], leftS);
+      matrix[i][j] =
+          merge_hashes(downOffsets[matrix[i - 1][j]],
+                        rightOffsets[matrix[i][j - 1]], substringA[j], leftS);
     }
   }
-  return matrica;
+  return matrix;
 }
 
-void ucitajNizove() {
-  ifstream infile("/Volumes/Zvijer/Google Drive/FER/BIO/repo/primjer-50000.in");
+void readStrings() {
+  ifstream infile("primjer-10000.in");
   if (!infile.is_open()) {
     cout << " Failed to open file" << endl;
   } else {
@@ -385,39 +383,39 @@ void ucitajNizove() {
   while (!infile.eof()) {
     getline(infile, text);
     if (cnt == 0)
-      nizA = text;
+      stringA = text;
     else if (cnt == 1)
-      nizB = text;
+      stringB = text;
     cnt++;
   }
   infile.close();
 }
 
-size_t getSizeBlokovi() {
-  size_t val = pow(3, tVrijednost * 2) * pow(4, tVrijednost * 2);
+size_t getSizeBlocks() {
+  size_t val = pow(3, tValue * 2) * pow(4, tValue * 2);
   return val;
 }
 
-void urediNizove() {
-  while (nizA.size() % tVrijednost != 0) nizA = nizA.substr(0, nizA.size() - 1);
-  while (nizB.size() % tVrijednost != 0) nizB = nizB.substr(0, nizB.size() - 1);
+void editStrings() {
+  while (stringA.size() % tValue != 0) stringA = stringA.substr(0, stringA.size() - 1);
+  while (stringB.size() % tValue != 0) stringB = stringB.substr(0, stringB.size() - 1);
 }
 void editScript(int** Matrix) {
-  int i = (int)nizB.size() / tVrijednost - 1;  // {i = ROWS in int**}
-  int j = (int)nizA.size() / tVrijednost - 1;  // {j = COLS in int**}
-  int a = tVrijednost;
-  int b = tVrijednost;
-  int cnterB = (int)nizB.size() - 1;
-  int cnterA = (int)nizA.size() - 1;
+  int i = (int)stringB.size() / tValue - 1;  // {i = ROWS in int**}
+  int j = (int)stringA.size() / tValue - 1;  // {j = COLS in int**}
+  int a = tValue;
+  int b = tValue;
+  int cnterB = (int)stringB.size() - 1;
+  int cnterA = (int)stringA.size() - 1;
   Cell** matrix;
-  // a = 0 -> got top in matrica {a = ROWS in Cell**}
-  // b = 0 - > got left in matrica {b = COLS in Cell**}
+  // a = 0 -> got top in matrix {a = ROWS in Cell**}
+  // b = 0 - > got left in matrix {b = COLS in Cell**}
   int cnter = 0;
   int size;
-  if (nizA.size() > nizB.size())
-    size = (int)nizA.size();
+  if (stringA.size() > stringB.size())
+    size = (int)stringA.size();
   else
-    size = (int)nizB.size();
+    size = (int)stringB.size();
   int val = size * 2;
   vector<char> first(val);
   vector<char> second(val);
@@ -425,14 +423,14 @@ void editScript(int** Matrix) {
 
   cout << i << " " << j << endl;
   while ((i + j) != 0) {
-    matrix = blokovi[Matrix[i][j]].matrix;
+    matrix = blocks[Matrix[i][j]].matrix;
     while (true) {
       if (matrix[a][b].top == true && matrix[a][b].left == true) {
         a--;
         b--;
-        first.insert(first.begin(), nizA[cnterA]);
-        second.insert(second.begin(), nizB[cnterB]);
-        if (nizA[cnterA] == nizB[cnterB]) {
+        first.insert(first.begin(), stringA[cnterA]);
+        second.insert(second.begin(), stringB[cnterB]);
+        if (stringA[cnterA] == stringB[cnterB]) {
           middle.insert(middle.begin(), '|');
         } else
           middle.insert(middle.begin(), '.');
@@ -440,14 +438,14 @@ void editScript(int** Matrix) {
         cnterB--;
       } else if (matrix[a][b].top == true) {
         a--;
-        second.insert(second.begin(), nizB[cnterB]);
+        second.insert(second.begin(), stringB[cnterB]);
         first.insert(first.begin(), '-');
         middle.insert(middle.begin(), ' ');
         cnterB--;
       } else {
         b--;
         second.insert(second.begin(), '-');
-        first.insert(first.begin(), nizA[cnterA]);
+        first.insert(first.begin(), stringA[cnterA]);
         middle.insert(middle.begin(), ' ');
         cnterA--;
       }
@@ -466,36 +464,36 @@ void editScript(int** Matrix) {
       if (i == 0) {
         j--;
         a = 0;
-        b = tVrijednost;
+        b = tValue;
       } else if (j == 0) {
         i--;
         b = 0;
-        a = tVrijednost;
+        a = tValue;
       } else {
         i--;
         j--;
-        a = tVrijednost;
-        b = tVrijednost;
+        a = tValue;
+        b = tValue;
       }
 
     } else if (a == 0) {
       i--;
-      a = tVrijednost;
+      a = tValue;
     } else if (b == 0) {
       j--;
-      b = tVrijednost;
+      b = tValue;
     }
     // cout << i << " " << j << endl;
   }
 
-  matrix = blokovi[Matrix[0][0]].matrix;
+  matrix = blocks[Matrix[0][0]].matrix;
   while (true) {
     if (matrix[a][b].top == true && matrix[a][b].left == true) {
       a--;
       b--;
-      first.insert(first.begin(), nizA[cnterA]);
-      second.insert(second.begin(), nizB[cnterB]);
-      if (nizA[cnterA] == nizB[cnterB]) {
+      first.insert(first.begin(), stringA[cnterA]);
+      second.insert(second.begin(), stringB[cnterB]);
+      if (stringA[cnterA] == stringB[cnterB]) {
         middle.insert(middle.begin(), '|');
       } else
         middle.insert(middle.begin(), '.');
@@ -503,14 +501,14 @@ void editScript(int** Matrix) {
       cnterB--;
     } else if (matrix[a][b].top == true) {
       a--;
-      second.insert(second.begin(), nizB[cnterB]);
+      second.insert(second.begin(), stringB[cnterB]);
       first.insert(first.begin(), '-');
       middle.insert(middle.begin(), ' ');
       cnterB--;
     } else {
       b--;
       second.insert(second.begin(), '-');
-      first.insert(first.begin(), nizA[cnterA]);
+      first.insert(first.begin(), stringA[cnterA]);
       middle.insert(middle.begin(), ' ');
       cnterA--;
     }
@@ -541,17 +539,17 @@ void editScript(int** Matrix) {
   outputFile << endl;
 }
 
-void writeMinDistance(int** matrica) {
+void writeMinDistance(int** matrix) {
   int min = 0;
 
-  for (int j = 0; j < nizA.size() / tVrijednost; j++) {
-    min = min + blokovi[matrica[nizB.size() / tVrijednost - 1][j]].sumaDown;
+  for (int j = 0; j < stringA.size() / tValue; j++) {
+    min = min + blocks[matrix[stringB.size() / tValue - 1][j]].sumDown;
   }
-  min = min + (int)nizB.size();
+  min = min + (int)stringB.size();
   cout << "MIN DISTANCE:" << min << endl;
 }
 
-int slovo_u_br(char c) {
+int letter_to_num(char c) {
   int val;
   if (c == 'A') {
     val = 0;
@@ -565,26 +563,26 @@ int slovo_u_br(char c) {
   return val;
 }
 
-int* podnizA;
-int* podnizB;
+int* substringA;
+int* substringB;
 void getsubArrays() {
-  podnizA = new int[nizA.size() / tVrijednost];
-  podnizB = new int[nizB.size() / tVrijednost];
-  for (int i = 0; i < nizA.size() / tVrijednost; i++) {
-    podnizA[i] = 0;
-    for (int j = 0; j < tVrijednost; ++j) {
-      podnizA[i] = podnizA[i] * 4 + slovo_u_br(nizA[i * tVrijednost + j]);
+  substringA = new int[stringA.size() / tValue];
+  substringB = new int[stringB.size() / tValue];
+  for (int i = 0; i < stringA.size() / tValue; i++) {
+    substringA[i] = 0;
+    for (int j = 0; j < tValue; ++j) {
+      substringA[i] = substringA[i] * 4 + letter_to_num(stringA[i * tValue + j]);
     }
   }
-  for (int i = 0; i < nizB.size() / tVrijednost; i++) {
-    podnizB[i] = 0;
-    for (int j = 0; j < tVrijednost; ++j) {
-      podnizB[i] = podnizB[i] * 4 + slovo_u_br(nizB[i * tVrijednost + j]);
+  for (int i = 0; i < stringB.size() / tValue; i++) {
+    substringB[i] = 0;
+    for (int j = 0; j < tValue; ++j) {
+      substringB[i] = substringB[i] * 4 + letter_to_num(stringB[i * tValue + j]);
     }
   }
 }
 
-void paralelnoPretprocesiranje() {
+void parallelPreProcessing() {
   E[0] = 'A';
   E[1] = 'C';
   E[2] = 'T';
@@ -599,10 +597,10 @@ void paralelnoPretprocesiranje() {
     for (int c1 = 0; c1 < 3; ++c1) {
       auto code = [c0, c1]() {
         vector<int> comb;
-        comb.resize(tVrijednost * 4);
+        comb.resize(tValue * 4);
         comb[0] = c0;
         comb[1] = c1;
-        generiraj(2, tVrijednost, comb);
+        generate(2, tValue, comb);
       };
       threads.push_back(thread(code));
     }
@@ -617,65 +615,65 @@ int main() {
   std::clock_t start;
   double duration;
 
-  ucitajNizove();
-  tVrijednost = calculateTValue((int)nizA.size(), (int)nizB.size());
-  tVrijednost = 3;
+  readStrings();
+  tValue = calculateTValue((int)stringA.size(), (int)stringB.size());
+  tValue = 3;
 
-  triNaTVrijednost = pow(3, tVrijednost);
-  cetiriNaTVrijenost = pow(4, tVrijednost);
-  cetiriNaTVrijenostNaKvadrat = cetiriNaTVrijenost * cetiriNaTVrijenost;
-  K = triNaTVrijednost * cetiriNaTVrijenostNaKvadrat;
+  threePowTValue = pow(3, tValue);
+  fourPowTValue = pow(4, tValue);
+  fourPowTValueSquare = fourPowTValue * fourPowTValue;
+  K = threePowTValue * fourPowTValueSquare;
 
-  downOffsets = new uint8_t[triNaTVrijednost * triNaTVrijednost *
-                            cetiriNaTVrijenostNaKvadrat];
-  rightOffsets = new uint8_t[triNaTVrijednost * triNaTVrijednost *
-                             cetiriNaTVrijenostNaKvadrat];
+  downOffsets = new uint8_t[threePowTValue * threePowTValue *
+                            fourPowTValueSquare];
+  rightOffsets = new uint8_t[threePowTValue * threePowTValue *
+                             fourPowTValueSquare];
 
-  urediNizove();
-  cout << "Prvi string:" << nizA << endl;
-  cout << "Drugi string:" << nizB << endl;
+  editStrings();
+  cout << "Prvi string:" << stringA << endl;
+  cout << "Drugi string:" << stringB << endl;
 
-  cout << "T value;" << tVrijednost << endl;
-  cout << getSizeBlokovi() << endl;
+  cout << "T value;" << tValue << endl;
+  cout << getSizeBlocks() << endl;
 
   double memory =
-      sizeof(Blok) * getSizeBlokovi() +
-      getSizeBlokovi() * sizeof(Cell) * (tVrijednost + 1) * (tVrijednost + 1);
+      sizeof(Blok) * getSizeBlocks() +
+      getSizeBlocks() * sizeof(Cell) * (tValue + 1) * (tValue + 1);
   cout << "Memmory needed: " << ((memory / 1024) / 1024) << " MB" << endl;
-  blokovi = new Blok[getSizeBlokovi()];
+  blocks = new Blok[getSizeBlocks()];
 
   cout << "Preprocessing STARTED" << endl;
 
   start = std::clock();
 
-  paralelnoPretprocesiranje();
+  parallelPreProcessing();
 
   getsubArrays();
   cout << "Preprocessing DONE" << endl;
   duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
-  printf("Maksimalni hash: %d\n", maksimalni);
+  printf("Maksimalni hash: %d\n", maximum);
 
   std::cout << "Duration of preprocessing:" << duration << " s\n";
   start = std::clock();
 
-  int** matricaUdaljenosti = calculatematricaUdaljenost(
-      (int)nizA.size(), (int)nizB.size(), podnizA, podnizB);
+  int** distanceMatrix = calculateEditMatrix(
+      (int)stringA.size(), (int)stringB.size(), substringA, substringB);
   duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
   std::cout << "Duration of calculating min distance:" << duration << '\n';
 
-  writeMinDistance(matricaUdaljenosti);
+  writeMinDistance(distanceMatrix);
 
   start = std::clock();
 
-  editScript(matricaUdaljenosti);
+  editScript(distanceMatrix);
 
   duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
   std::cout << "Duration of calculating edit script:" << duration << '\n';
   outputFile.close();
 
-  delete[] blokovi;
+  delete[] blocks;
   return 0;
 }
