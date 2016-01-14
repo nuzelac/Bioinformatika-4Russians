@@ -1,3 +1,10 @@
+/*
+ * Cell.cpp
+ * Cell class
+ * Cell class is consited of main value
+ * 
+ */ 
+
 #include "Cell.h"
 #include <iostream>
 #include <string>

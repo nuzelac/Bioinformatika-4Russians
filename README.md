@@ -1,29 +1,29 @@
 # README #
 
-To run application, follow steps listed below:
+In computer science, the Method of Four Russians is a technique for speeding up algorithms involving Boolean matrices, or more generally algorithms involving matrices in which each cell may take on only a bounded number of possible values.
 
-### What is this repository for? ###
+Calculating edit distance between two strings and recovering a sequence of edit operations that achieves this minimal edit distance, execution time of those operation depends greatly on strings lengths.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Implemented solution applies Four Russians method to speed up execution of mentioned operations.
 
-### How do I get set up? ###
+### About ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* Four Russians method is applied to speed up execution of calculating minimal edit distance
+* Version 1.0
 
-### Contribution guidelines ###
+### Installation ###
 
-* Writing tests
-* Code review
-* Other guidelines
+* Download repository to your local machine
+* Position yourself in bioinformatika4Russians folder (use: cd with terminal)
+* Position yourself in source folder (use: cd source)
+* Run make in your terminal
+* To execute program run ./p1 inputFile outputFile format tValue
+* For details about passed arguments run ./p1 -help or ./p1 --help
+* To run test execute ./inputFile outputFile format tValue and pass location of test (/tests) file as inputFile
 
-### Who do I talk to? ###
 
-* Repo owner or admin
-* Other community or team contact
+### Authors ###
+
+* Authors:Domagoj Magaš, Nino Uzelac and Marko Sertić
+* Project made as part of Bionformatics course at Faculty of Electrical Engineering
+* Link to course: https://www.fer.unizg.hr/predmet/bio

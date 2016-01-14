@@ -1,11 +1,16 @@
-#include "Blok.h"
+/*
+ * Block Class
+ * 
+ */
+
+#include "Block.h"
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-Blok::Blok(){};
-Blok::Blok(int tVal, signed char* topS, signed char* leftS, int* topO,
+Block::Block(){};
+Block::Block(int tVal, signed char* topS, signed char* leftS, int* topO,
            int* leftO) {
   matrix = new Cell*[tVal + 1];
 
@@ -53,7 +58,7 @@ Blok::Blok(int tVal, signed char* topS, signed char* leftS, int* topO,
   }
 }
 
-string Blok::printOut(vector<string> offsetA, vector<string> offsetB,
+string Block::printOut(vector<string> offsetA, vector<string> offsetB,
                       string topS, string leftS) {
   string s = "";
   for (int i = 0; i < offsetA.size(); i++) s = s + offsetA[i];
@@ -62,7 +67,8 @@ string Blok::printOut(vector<string> offsetA, vector<string> offsetB,
   return s;
 }
 
-int Blok::calcDownOffsets(int tVal) {
+
+int Block::calcDownOffsets(int tVal) {
   int downOffsets = 0;
   for (int i = 1; i <= tVal; i++) {
     downOffsets = downOffsets * 3 +
@@ -71,7 +77,7 @@ int Blok::calcDownOffsets(int tVal) {
 
   return downOffsets;
 }
-int Blok::calcRightOffsets(int tVal) {
+int Block::calcRightOffsets(int tVal) {
   int rightOffsets = 0;
 
   for (int i = 1; i <= tVal; i++) {

@@ -76,7 +76,13 @@ int main(int argc, char** argv) {
   		exit(100);
   	}
   }
-
+  
+  /*
+   * All needed is to create fourRussians
+   * And to call implemented functions
+   * Code is designed to be reusable
+   * 
+   */ 
   FourRussians fourRussians(fileName, outputFileName, outputFormat, value);
 
   cout << "Prvi string:" << fourRussians.stringA << endl;
@@ -85,7 +91,7 @@ int main(int argc, char** argv) {
   cout << fourRussians.getSizeBlocks() << endl;
 
   double memory =
-      sizeof(Blok) * fourRussians.getSizeBlocks() +
+      sizeof(Block) * fourRussians.getSizeBlocks() +
       fourRussians.getSizeBlocks() * sizeof(Cell) * (fourRussians.tValue + 1) * (fourRussians.tValue + 1);
   cout << "Memmory needed: " << ((memory / 1024) / 1024) << " MB" << endl;
 
