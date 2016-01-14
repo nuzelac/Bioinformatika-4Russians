@@ -5,7 +5,7 @@
 using namespace std;
 
 char alphabet[] = "ACTG";
-int n = 500000;
+int n = 100;
 
 void printWord() {
   for(int i = 0; i < n; ++i) {
