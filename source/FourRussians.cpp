@@ -413,14 +413,17 @@ void FourRussians::parallelPreProcessing() {
 
   for (int c0 = 0; c0 < 3; ++c0) {
     for (int c1 = 0; c1 < 3; ++c1) {
-      auto code = [this, c0, c1]() {
-        vector<int> comb;
-        comb.resize(FourRussians::tValue * 4);
-        comb[0] = c0;
-        comb[1] = c1;
-        generate(2, tValue, comb);
-      };
-      threads.push_back(thread(code));
+      for (int c2 = 0; c2 < 3; ++c2) {
+        auto code = [this, c0, c1, c2]() {
+          vector<int> comb;
+          comb.resize(FourRussians::tValue * 4);
+          comb[0] = c0;
+          comb[1] = c1;
+          comb[2] = c2;
+          generate(3, tValue, comb);
+        };
+        threads.push_back(thread(code));
+      }
     }
   }
 
